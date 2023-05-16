@@ -1,0 +1,18 @@
+Error executing job with overrides: []
+Traceback (most recent call last):
+  File "/Users/zhouyuqin/Desktop/Thesis/experiments/train.py", line 708, in main
+    train(config)
+  File "/Users/zhouyuqin/Desktop/Thesis/experiments/train.py", line 681, in train
+    trainer = create_trainer(config)
+  File "/Users/zhouyuqin/Desktop/Thesis/experiments/train.py", line 669, in create_trainer
+    trainer = pl.Trainer(
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/pytorch_lightning/utilities/argparse.py", line 69, in insert_env_defaults
+    return fn(self, **kwargs)
+TypeError: __init__() got an unexpected keyword argument 'track_grad_norm'
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[2023-05-14 20:59:56,201][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-05-14 20:59:56,202][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-05-14 20:59:56,204][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-05-14 20:59:56,205][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-05-14 20:59:56,208][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-05-14 20:59:56,209][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>

@@ -1,0 +1,6 @@
+[2023-05-14 12:16:35,919][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-05-14 12:16:35,920][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-05-14 12:16:35,921][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-05-14 12:16:35,922][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-05-14 12:16:35,924][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-05-14 12:16:35,924][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>

@@ -1,0 +1,258 @@
+Epoch: 0:   0%|                                                        | 0/200 [00:00<?, ?it/s]
+Batch Idx: (6/900) | Loss: 2.324 | Acc: 11.429% (40/350): : 7it [00:01,  4.33it/s]
+==> Building model / ...
+Optimizer group 0 | 12 tensors | lr 1.4285714285714284e-05 | weight_decay 0.05
+Optimizer group 1 | 4 tensors | lr 3.571428571428571e-06 | weight_decay 0.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Batch Idx: (893/900) | Loss: 2.337 | Acc: 10.698% (4782/44700): : 894it [03:26,  4.30it/s]
+Batch Idx: (899/900) | Loss: 2.337 | Acc: 10.704% (4817/45000): : 900it [03:27,  4.34it/s]
+
+
+
+Batch Idx: (91/100) | Loss: 2.328 | Acc: 10.848% (499/4600): : 92it [00:06, 13.55it/s]
+Epoch: 1 | Val acc: 10.780:   0%|▏                         | 1/200 [03:35<11:53:36, 215.16s/it]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Batch Idx: (890/900) | Loss: 2.323 | Acc: 11.042% (4919/44550): : 891it [03:25,  4.27it/s]
+Batch Idx: (899/900) | Loss: 2.323 | Acc: 11.051% (4973/45000): : 900it [03:27,  4.09it/s]
+
+
+
+Batch Idx: (79/100) | Loss: 2.310 | Acc: 11.425% (457/4000): : 80it [00:06, 13.16it/s]
+Epoch: 2 | Val acc: 11.240:   1%|▎                         | 2/200 [07:10<11:50:27, 215.29s/it]
+
+
+
+
+Epoch: 2 | Val acc: 11.240:   1%|▎                         | 2/200 [07:20<12:06:28, 220.15s/it]
+Traceback (most recent call last):
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/runpy.py", line 185, in _run_module_as_main
+    mod_name, mod_spec, code = _get_module_details(mod_name, _Error)
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/runpy.py", line 111, in _get_module_details
+    __import__(pkg_name)
+  File "/Users/zhouyuqin/Desktop/Thesis/experiments/T_example.py", line 378, in <module>
+    epoch_loss = train(model = model,optimizer = optimizer, criterion = nn.CrossEntropyLoss())
+  File "/Users/zhouyuqin/Desktop/Thesis/experiments/T_example.py", line 262, in train
+    for batch_idx, (inputs, targets) in pbar:
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 58, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 58, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torch/utils/data/dataset.py", line 295, in __getitem__
+    return self.dataset[self.indices[idx]]
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torchvision/datasets/cifar.py", line 118, in __getitem__
+    img = self.transform(img)
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torchvision/transforms/transforms.py", line 95, in __call__
+    img = t(img)
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torchvision/transforms/transforms.py", line 135, in __call__
+    return F.to_tensor(pic)
+  File "/Users/zhouyuqin/opt/anaconda3/lib/python3.8/site-packages/torchvision/transforms/functional.py", line 167, in to_tensor
+    img = img.view(pic.size[1], pic.size[0], len(pic.getbands()))
+KeyboardInterrupt

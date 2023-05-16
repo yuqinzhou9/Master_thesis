@@ -1,0 +1,8 @@
+- pipeline=mnist
+- dataset.permute=True
+- model=s4
+- model.n_layers=3
+- model.d_model=128
+- model.norm=batch
+- model.prenorm=True
+- wandb=null

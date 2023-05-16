@@ -1,0 +1,9 @@
+==> Building model / ...
+==> Training...
+Batch: 0, Avg: 2.3885252475738525
+Epoch: 0:   0%|          | 0/200 [00:00<?, ?it/s]
+
+
+
+Epoch: 0:   0%|          | 0/200 [00:05<?, ?it/s]90/1050): : 21it [00:05,  3.77it/s]
+./checkpoint/checkpoint_2w8cv62m.pth
