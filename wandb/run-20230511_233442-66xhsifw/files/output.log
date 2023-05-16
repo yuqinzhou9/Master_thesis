@@ -1,0 +1,44 @@
+
+==> Building model / ...
+{'weight_decay': 0.0, 'lr': None}
+{'weight_decay': 0.0, 'lr': None}
+RNNbased(
+  (encoder): Linear(in_features=3, out_features=5, bias=True)
+  (layers): ModuleList(
+    (0): RNN(
+      (cell): RNNCell(
+        (W_hx): Linear(in_features=5, out_features=5, bias=False)
+        (activate): Tanh()
+        (W_hh): Linear(in_features=5, out_features=5, bias=False)
+      )
+    )
+    (1): RNN(
+      (cell): RNNCell(
+        (W_hx): Linear(in_features=5, out_features=5, bias=False)
+        (activate): Tanh()
+        (W_hh): Linear(in_features=5, out_features=5, bias=False)
+      )
+    )
+  )
+  (norms): ModuleList(
+    (0): BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dropouts): ModuleList(
+    (0): Dropout1d(p=0.1, inplace=False)
+    (1): Dropout1d(p=0.1, inplace=False)
+  )
+  (FFNs): ModuleList(
+    (0): Sequential(
+      (0): Linear(in_features=5, out_features=10, bias=True)
+      (1): GLU(dim=-1)
+    )
+    (1): Sequential(
+      (0): Linear(in_features=5, out_features=10, bias=True)
+      (1): GLU(dim=-1)
+    )
+  )
+  (decoder): Linear(in_features=5, out_features=10, bias=True)
+)
+{'weight_decay': 0.0, 'lr': 0.0025}
+{'weight_decay': 0.0, 'lr': 0.0025}

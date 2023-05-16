@@ -1,0 +1,27 @@
+2023-05-12 19:16:26,424 INFO    MainThread:65768 [wandb_setup.py:_flush():76] Current SDK version is 0.15.2
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_setup.py:_flush():76] Configure stats pid to 65768
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_setup.py:_flush():76] Loading settings from /Users/zhouyuqin/.config/wandb/settings
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_setup.py:_flush():76] Loading settings from /Users/zhouyuqin/Desktop/Thesis/experiments/wandb/settings
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_init.py:_log_setup():507] Logging user logs to /Users/zhouyuqin/Desktop/Thesis/experiments/wandb/run-20230512_191626-zk9g929w/logs/debug.log
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_init.py:_log_setup():508] Logging internal logs to /Users/zhouyuqin/Desktop/Thesis/experiments/wandb/run-20230512_191626-zk9g929w/logs/debug-internal.log
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_init.py:init():547] calling init triggers
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_init.py:init():554] wandb.init called with sweep_config: {}
+config: {'dataset': 'cifar10', 'grayscale': False, 'num_workers': 0, 'batch_size': 50, 'lr': 0.01, 'lr_factor': 0.25, 'weight_decay': 0.05, 'epochs': 200, 'n_layers': 2, 'd_model': 128, 'd_hidden': 196, 'dropout': 0.1, 'prenorm': True, 'norm': 'BN', 'cell': 'rnn', 'resume': False}
+2023-05-12 19:16:26,425 INFO    MainThread:65768 [wandb_init.py:init():571] re-initializing run, found existing run on stack: tvli55po
+2023-05-12 19:16:26,427 INFO    MainThread:65768 [wandb_run.py:_finish():1893] finishing run yuqinzhou/test/tvli55po
+2023-05-12 19:16:26,428 INFO    MainThread:65768 [jupyter.py:save_history():445] not saving jupyter history
+2023-05-12 19:16:26,428 INFO    MainThread:65768 [jupyter.py:save_ipynb():373] not saving jupyter notebook
+2023-05-12 19:16:26,428 INFO    MainThread:65768 [wandb_init.py:_jupyter_teardown():435] cleaning up jupyter logic
+2023-05-12 19:16:26,428 INFO    MainThread:65768 [wandb_run.py:_atexit_cleanup():2127] got exitcode: 0
+2023-05-12 19:16:26,428 INFO    MainThread:65768 [wandb_run.py:_restore():2110] restore
+2023-05-12 19:16:26,428 INFO    MainThread:65768 [wandb_run.py:_restore():2116] restore done
+2023-05-12 19:16:43,385 INFO    MainThread:65768 [wandb_init.py:init():596] starting backend
+2023-05-12 19:16:43,385 INFO    MainThread:65768 [wandb_init.py:init():600] setting up manager
+2023-05-12 19:16:43,392 INFO    MainThread:65768 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=spawn,fork,forkserver, using: spawn
+2023-05-12 19:16:43,393 INFO    MainThread:65768 [wandb_init.py:init():606] backend started and connected
+2023-05-12 19:16:43,407 INFO    MainThread:65768 [wandb_run.py:_label_probe_notebook():1238] probe notebook
+2023-05-12 19:16:43,407 INFO    MainThread:65768 [wandb_run.py:_label_probe_notebook():1248] Unable to probe notebook: 'NoneType' object has no attribute 'get'
+2023-05-12 19:16:43,408 INFO    MainThread:65768 [wandb_init.py:init():700] updated telemetry
+2023-05-12 19:16:43,409 INFO    MainThread:65768 [wandb_init.py:init():737] communicating run to backend with 60.0 second timeout

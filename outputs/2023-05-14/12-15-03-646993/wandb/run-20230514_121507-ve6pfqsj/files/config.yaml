@@ -1,0 +1,232 @@
+wandb_version: 1
+
+train:
+  desc: null
+  value:
+    seed: 0
+    name: null
+    interval: epoch
+    monitor: val/accuracy
+    mode: max
+    ema: 0.0
+    test: false
+    debug: false
+    ignore_warnings: false
+    state:
+      mode: null
+      n_context: 0
+      n_context_eval: 0
+    ckpt: null
+    disable_dataset: false
+    validate_at_start: false
+    pretrained_model_path: null
+    pretrained_model_strict_load: true
+    pretrained_model_state_hook:
+      _name_: null
+    post_init_hook:
+      _name_: null
+    layer_decay:
+      _name_: null
+      decay: 0.7
+tolerance:
+  desc: null
+  value:
+    logdir: ./resume
+    id: null
+wandb:
+  desc: null
+  value:
+    project: hippo
+    group: ''
+    job_type: training
+    mode: online
+    save_dir: .
+    id: null
+trainer:
+  desc: null
+  value:
+    accelerator: gpu
+    strategy: null
+    devices: 1
+    accumulate_grad_batches: 1
+    max_epochs: 200
+    gradient_clip_val: null
+    log_every_n_steps: 10
+    limit_train_batches: 1.0
+    limit_val_batches: 1.0
+    enable_model_summary: false
+    track_grad_norm: -1
+loader:
+  desc: null
+  value:
+    batch_size: 50
+    num_workers: 4
+    pin_memory: true
+    drop_last: true
+dataset:
+  desc: null
+  value:
+    _name_: mnist
+    permute: true
+    val_split: 0.1
+    seed: 42
+task:
+  desc: null
+  value:
+    _name_: base
+    loss: cross_entropy
+    metrics:
+      '0': accuracy
+    torchmetrics: null
+optimizer:
+  desc: null
+  value:
+    _name_: adamw
+    lr: 0.001
+    weight_decay: 0.0
+    betas:
+      '0': 0.9
+      '1': 0.999
+scheduler:
+  desc: null
+  value:
+    _name_: plateau
+    mode: max
+    factor: 0.2
+    patience: 20
+    min_lr: 0.0
+encoder:
+  desc: null
+  value: linear
+decoder:
+  desc: null
+  value:
+    _name_: sequence
+    mode: pool
+model:
+  desc: null
+  value:
+    layer:
+      _name_: s4
+      d_state: 64
+      channels: 1
+      bidirectional: false
+      gate: null
+      gate_act: id
+      bottleneck: null
+      activation: gelu
+      mult_act: null
+      final_act: glu
+      postact: null
+      initializer: null
+      weight_norm: false
+      tie_dropout: true
+      mode: nplr
+      init: legs
+      measure: null
+      rank: 1
+      dt_min: 0.001
+      dt_max: 0.1
+      dt_transform: softplus
+      lr:
+        dt: 0.001
+        A: 0.001
+        B: 0.001
+      wd: 0.0
+      n_ssm: 1
+      deterministic: false
+      l_max: 784
+      verbose: true
+    _name_: model
+    prenorm: true
+    transposed: false
+    n_layers: 4
+    d_model: 256
+    bidirectional: false
+    residual: R
+    pool:
+      _name_: pool
+      stride: 1
+      expand: null
+    norm: layer
+    dropout: 0.0
+    tie_dropout: true
+    track_norms: true
+    encoder: null
+    decoder: null
+callbacks:
+  desc: null
+  value:
+    learning_rate_monitor:
+      logging_interval: epoch
+    timer:
+      step: true
+      inter_step: false
+      epoch: true
+      val: true
+    params:
+      total: true
+      trainable: true
+      fixed: true
+    model_checkpoint:
+      monitor: val/accuracy
+      mode: max
+      save_top_k: 1
+      save_last: true
+      dirpath: checkpoints/
+      filename: val/accuracy
+      auto_insert_metric_name: false
+      verbose: true
+    rich_model_summary:
+      max_depth: 1
+    rich_progress_bar:
+      refresh_rate: 1
+      leave: true
+_wandb:
+  desc: null
+  value:
+    python_version: 3.8.13
+    cli_version: 0.15.2
+    framework: huggingface
+    huggingface_version: 4.19.2
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1684059307.645583
+    t:
+      1:
+      - 1
+      - 5
+      - 9
+      - 11
+      - 40
+      - 41
+      - 49
+      - 50
+      - 51
+      - 53
+      - 55
+      2:
+      - 1
+      - 5
+      - 9
+      - 11
+      - 40
+      - 41
+      - 49
+      - 50
+      - 51
+      - 53
+      - 55
+      3:
+      - 7
+      - 16
+      - 23
+      4: 3.8.13
+      5: 0.15.2
+      6: 4.19.2
+      8:
+      - 6
+    m:
+    - 1: trainer/global_step
+      6:
+      - 3
