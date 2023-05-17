@@ -54,9 +54,9 @@ parser.add_argument('--epochs', default=200, type=float, help='Training epochs')
 
 
 # Model
-parser.add_argument('--n_layers', default=2, type=int, help='Number of layers') #6
-parser.add_argument('--d_model', default= 5, type=int, help='Model dimension') #512
-parser.add_argument('--d_hidden', default= 10, type=int, help='Hidden (state) dimension ') #384
+parser.add_argument('--n_layers', default= 6, type=int, help='Number of layers') #6
+parser.add_argument('--d_model', default= 128, type=int, help='Model dimension') #512
+parser.add_argument('--d_hidden', default= 256, type=int, help='Hidden (state) dimension ') #384
 parser.add_argument('--dropout', default=0.1, type=float, help='Dropout')
 parser.add_argument('--prenorm', action='store_false', help='Prenorm')
 parser.add_argument('--norm', default= 'BN', choices=['LN', 'BN'], help='Norm types')
@@ -315,7 +315,7 @@ def eval(model, criterion, dataloader):
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 run_id = wandb.util.generate_id()
-# run_id = '0h3xuccv'
+# run_id = 'kw4enoiw'
 CHECKPOINT_PATH = f'./checkpoint/checkpoint_{run_id}.pth'
 print(CHECKPOINT_PATH)
 
@@ -331,7 +331,7 @@ for run in range(total_runs):
         config=args,
         resume = 'allow')
     
-    # defining model (resume or not)
+    # defining model, optimizer, scheduler (whether resume or not)
     model = RNNbased(d_input=d_input, 
                     d_output=d_output, 
                     lr = args.lr * args.lr_factor,
@@ -342,10 +342,10 @@ for run in range(total_runs):
                     dropout=args.dropout, 
                     prenorm=args.prenorm)
     
+    optimizer, scheduler = setup_optimizer(model, lr=args.lr, weight_decay=args.weight_decay, epochs=args.epochs)
+    
     if not wandb.run.resumed:
         print('==> Building model / ...')
-        optimizer, scheduler = setup_optimizer(model, lr=args.lr, weight_decay=args.weight_decay, epochs=args.epochs)
-
     else:
         print('==> Resuming from checkpoint...')
         checkpoint = torch.load(CHECKPOINT_PATH) #not use wandb.restore('checkpoint.tar') because of encoding error
