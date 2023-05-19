@@ -1,3 +1,6 @@
+import faulthandler
+faulthandler.enable()
+
 import copy
 import os
 import random

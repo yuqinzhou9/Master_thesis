@@ -1,1 +1,4 @@
 wandb/
+outputs/
+data/
+**/__pycache__/
