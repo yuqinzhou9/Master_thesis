@@ -1,1 +1,0 @@
-{"_step": 6141, "_runtime": 3094.715345144272, "_timestamp": 1683731869.7406552, "Val/Val acc": 24.8, "Train/Batch loss": 2.005349906196807, "Train/Epoch Loss": 2.0243017205927107, "lr": 0.0004761904761904762, "_wandb": {"runtime": 3313}}
