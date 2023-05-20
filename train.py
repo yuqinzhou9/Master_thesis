@@ -1,6 +1,3 @@
-import faulthandler
-faulthandler.enable()
-
 import copy
 import os
 import random
@@ -656,7 +653,7 @@ def create_trainer(config):
         config.trainer.pop("profiler")
 
 
-    # Configure ddp automatically
+    # Configure ddp (Distributed Data Parallel) automatically
     if config.trainer.accelerator == 'gpu' and config.trainer.devices > 1:
         print("ddp automatically configured, more than 1 gpu used!")
         config.trainer.strategy = "ddp"
@@ -681,6 +678,7 @@ def create_trainer(config):
 def train(config):
     if config.train.seed is not None:
         pl.seed_everything(config.train.seed, workers=True)
+    
     trainer = create_trainer(config)
     model = SequenceLightningModule(config)
 

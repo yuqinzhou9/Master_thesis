@@ -1,4 +1,5 @@
 wandb/
 outputs/
 data/
+slurm/
 **/__pycache__/
