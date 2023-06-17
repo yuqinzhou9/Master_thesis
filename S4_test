@@ -1,4 +1,0 @@
-#!/bin/bash
-#SBATCH --ntasks=1 --cpus-per-task=4 --mem=6000M
-#SBATCH -p gpu --gres=gpu:titanx:1
-python -m train pipeline=cifar model=s4 

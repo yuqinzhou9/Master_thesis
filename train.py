@@ -638,7 +638,7 @@ def create_trainer(config):
 
     # Lightning callbacks
     if "callbacks" in config:
-        for _name_, callback in config.callbacks.items():
+        for _name_, callback in config.callbacks.items(): #e.g., base, checkpint
             if callback is None: continue
             if config.get("wandb") is None and _name_ in ["learning_rate_monitor"]:
                 continue

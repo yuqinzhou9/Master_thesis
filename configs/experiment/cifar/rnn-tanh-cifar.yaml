@@ -1,0 +1,43 @@
+# @package _global_
+# Basic rnn experiment
+# Override model/layer/cell for different RNN cells, e.g. `python -m train experiment=rnn model/layer/cell=hippo-legs
+defaults:
+  - /pipeline: cifar
+  - /model: s4
+  - override /model/layer: rnn
+  - override /model/layer/cell: rnn
+  - override /scheduler: cosine_warmup
+
+# Different default settings for model backbone
+model:
+  dropout: 0.0 #0.1
+  tie_dropout: false #tru
+  n_layers: 1 #6
+  d_input: 256 #256
+  d_model: 256 #256
+  prenorm: False
+  transposed: False
+  residual: N #residual
+  pool: null #pool
+  norm: none #layer
+  # track_norms: false
+
+# Decode using the end state
+decoder: state
+
+loader:
+  batch_size: 50
+
+optimizer:
+  lr: 0.01
+  weight_decay: 0.05
+
+trainer:
+  max_epochs: 200
+
+scheduler:
+  num_warmup_steps: 900  # 1 epoch
+  num_training_steps: 180000  # 200 epochs
+
+train:
+  seed: 2222

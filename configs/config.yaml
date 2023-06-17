@@ -67,6 +67,7 @@ wandb:
   mode: online # choices=['online', 'offline', 'disabled']
   save_dir: "."
   id: null # pass correct id to resume experiment!
+  name: null #set a short display name for this run
   # Below options should not need to be specified
   # entity: ""  # set to name of your wandb team or just remove it
   # log_model: False
