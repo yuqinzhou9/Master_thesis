@@ -13,32 +13,19 @@ cell_registry = {
     for name, target in CellBase.registry.items()
 }
 
-# {'rnn': 'src.models.sequence.rnns.cells.basic.RNNCell',
-#  'gru': 'src.models.sequence.rnns.cells.basic.GatedRNNCell',
-#  'exprnn': 'src.models.sequence.rnns.cells.basic.ExpRNNCell',
-#  'legt': 'src.models.sequence.rnns.cells.hippo.LegTCell',
-#  'legs': 'src.models.sequence.rnns.cells.hippo.LegSCell',
-#  'lagt': 'src.models.sequence.rnns.cells.hippo.LagTCell',
-#  'glagt': 'src.models.sequence.rnns.cells.hippo.GLagTCell',
-#  'lmu': 'src.models.sequence.rnns.cells.hippo.LMUCell',
-#  'random': 'src.models.sequence.rnns.cells.hippo.RandomCell',
-#  'tlsi': 'src.models.sequence.rnns.cells.timestamp.TimeLSICell',
-#  'tlti': 'src.models.sequence.rnns.cells.timestamp.TimeLTICell',
-#  'sru': 'src.models.sequence.rnns.sru.SRUCell'}
-
 
 class RNN(SequenceModule):
-    def __init__(self, d_input, d_model, lr = None, cell=None, return_output=True, transposed=False, dropout=0.0):
+    def __init__(self, d_model, cell=None, return_output=True, transposed=False, dropout=0.0):
         """
         return_output: if False, only returns the state
         """
         super().__init__()
         self.transposed = transposed
         if dropout > 0.0:
-            raise NotImplementedError("Dropout currently not supported for custom RNNs")
+            print("NOTE: no dropout inside recurrent cell")
+            # raise NotImplementedError("Dropout currently not supported for custom RNNs")
         self.return_output = return_output
-
-        self.cell = utils.instantiate(cell_registry, cell, d_input, d_model, lr)
+        self.cell = utils.instantiate(cell_registry, cell, d_model = d_model) #cell is a positional parameter containing a nested dictionar: e.g., 'cell': {'_name_': 'rnn', 'hidden_activation': 'tanh', 'orthogonal': False, 'd_input': 1024, 'lr': 0.001}
 
     def forward(self, inputs, state=None, **kwargs):
         """

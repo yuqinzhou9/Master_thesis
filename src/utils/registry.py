@@ -75,6 +75,8 @@ layer = {
     "ffn":        "src.models.sequence.modules.ffn.FFN",
     "sru":        "src.models.sequence.rnns.sru.SRURNN",
     "rnn":        "src.models.sequence.rnns.rnn.RNN",  # General RNN wrapper
+    "rnn-test":   "src.models.sequence.rnns.rnn-test.RNNbased",
+    "rnn-single":   "src.models.sequence.rnns.rnn-single.RNNbased",
     "conv1d":     "src.models.sequence.convs.conv1d.Conv1d",
     "conv2d":     "src.models.sequence.convs.conv2d.Conv2d",
     "mha":        "src.models.sequence.attention.mha.MultiheadAttention",
