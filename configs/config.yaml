@@ -10,6 +10,7 @@ defaults:
   # # - task: multiclass_classification # Defines loss and metrics
   # # - encoder: null # Interface between data and model
   # # - decoder: null # Interface between model and targets
+  # also includes: trainer + scheduler + scheduler
   - callbacks: # Extra pytorch-lightning features
     - base
     - checkpoint

@@ -91,6 +91,9 @@ def instantiate(registry, config, *args, partial=False, wrap=None, **kwargs):
         fn = wrap(fn)
     obj = functools.partial(fn, *args, **config, **kwargs)
 
+    ## print out model architecture for debug
+    if _target_ == "src.models.sequence.rnns.rnn.RNN":
+        print(obj())
     # Restore _name_
     if _name_ is not None:
         config["_name_"] = _name_
