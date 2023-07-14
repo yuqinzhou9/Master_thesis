@@ -6,6 +6,13 @@ from src.models.sequence.rnns.rnn import RNN
 
 
 
+
+
+
+
+
+
+
 class RNNbased(nn.Module):
 
     def __init__(

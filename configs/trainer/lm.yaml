@@ -1,5 +1,5 @@
 accelerator: gpu
-devices: 8
+devices: 1
 accumulate_grad_batches: 1
 # amp_backend: native # 'native' | 'apex'
 max_epochs: 50

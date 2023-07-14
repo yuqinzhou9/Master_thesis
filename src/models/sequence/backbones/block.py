@@ -74,11 +74,19 @@ class SequenceResidualBlock(SequenceModule):
 
         # Dropout
         dropout_cls = partial(DropoutNd, transposed=self.transposed) if tie_dropout else nn.Dropout
-        self.drop = dropout_cls(dropout) if dropout > 0.0 else nn.Identity()
+        # self.drop = dropout_cls(dropout) if dropout > 0.0 else nn.Identity()
+        self.drop = nn.Dropout1d(dropout) if dropout > 0.0 else nn.Identity()
+
+        # position-wise output transform to mix features
+        self.output_linear = nn.Sequential(
+            nn.Conv1d(self.d_input, 2*self.d_input, kernel_size=1),
+            nn.GLU(dim=-2),
+        )
 
         # Stochastic depth
-        self.drop_path = StochasticDepth(drop_path, mode='row') if drop_path > 0.0 else nn.Identity()
+        # self.drop_path = StochasticDepth(drop_path, mode='row') if drop_path > 0.0 else nn.Identity()
 
+        self.activation = nn.GELU()
 
     @property
     def d_output(self):
@@ -112,36 +120,52 @@ class SequenceResidualBlock(SequenceModule):
         else:
             y = y_for
 
-        # Residual
-        if self.residual is not None: y = self.residual(x, self.drop_path(self.drop(y)), self.transposed)
-
         # Post-norm
         if self.norm is not None and not self.prenorm: y = self.norm(y)
 
-        # Pool
-        if self.pool is not None: y, _ = self.pool(y)
+        if not self.transposed: y = y.transpose(-1, -2) #(B, H, L) 
+       
+       ##! Dropout + GELU
+        y = self.drop(self.activation(y)) 
 
-        return y, state
+        ##! position-wise FFN
+        y = self.output_linear(y)  
 
-    def step(self, x, state, **kwargs):
-        assert not self.bidirectional
-        y = x
+        ##! Droput
+        y = self.drop(y)
+        
+        if not self.transposed: y = y.transpose(-1, -2) #(B, L, H) 
 
-        # Pre-norm
-        if self.norm is not None and self.prenorm:
-            y = self.norm.step(y)
+        return y + x, state
 
-        # Black box layer
-        y, state = self.layer.step(y, state, **kwargs)
+    # def step(self, x, state, **kwargs):
+    #     assert not self.bidirectional
+    #     y = x
 
-        # Residual
-        if self.residual is not None: y = self.residual(x, y, transposed=False) # NOTE this would not work with concat residual function (catformer)
+    #     # Pre-norm
+    #     if self.norm is not None and self.prenorm:
+    #         y = self.norm.step(y)
 
-        # Post-norm
-        if self.norm is not None and not self.prenorm:
-            y = self.norm.step(y)
+    #     # Black box layer
+    #     y, state = self.layer.step(y, state, **kwargs)
 
-        # Pool
-        if self.pool is not None: y, _ = self.pool(y)
+    #     # Post-norm
+    #     if self.norm is not None and not self.prenorm:
+    #         y = self.norm.step(y)
+        
+    #     ##! Dropout + Gelu
+    #     y = self.drop(self.gelu(y))
 
-        return y, state
+    #     ##! position-wise FFN
+    #     y = self.output_linear(y)
+
+    #     ##! Droput
+    #     y = self.drop(y)
+        
+    #     ##! Residual
+    #     if self.residual is not None: y = self.residual(x, y, transposed=False) # NOTE this would not work with concat residual function (catformer)
+
+    #     # Pool
+    #     if self.pool is not None: y, _ = self.pool(y)
+
+    #     return y, state

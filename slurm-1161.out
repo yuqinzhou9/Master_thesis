@@ -1,0 +1,1573 @@
+CONFIG
+├── train
+│   └── seed: 2222                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/accuracy                                                   
+│       mode: max                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: rnn-lin-mnist-new                                                 
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       strategy: null                                                          
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 100                                                         
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       enable_model_summary: false                                             
+│       track_grad_norm: -1                                                     
+│                                                                               
+├── loader
+│   └── batch_size: 50                                                          
+│       num_workers: 4                                                          
+│       pin_memory: true                                                        
+│       drop_last: true                                                         
+│                                                                               
+├── dataset
+│   └── _name_: mnist                                                           
+│       permute: true                                                           
+│       val_split: 0.1                                                          
+│       seed: 42                                                                
+│                                                                               
+├── task
+│   └── _name_: base                                                            
+│       loss: cross_entropy                                                     
+│       metrics:                                                                
+│       - accuracy                                                              
+│       torchmetrics: null                                                      
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 0.0003                                                              
+│       weight_decay: 0.05                                                      
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 10800                                                 
+│       num_training_steps: 108000                                              
+│                                                                               
+├── encoder
+│   └── linear                                                                  
+├── decoder
+│   └── _name_: sequence                                                        
+│       mode: pool                                                              
+│                                                                               
+├── model
+│   └── layer:                                                                  
+│         cell:                                                                 
+│           _name_: rnn                                                         
+│           hidden_activation: identity                                         
+│           orthogonal: false                                                   
+│           d_input: 384                                                        
+│           lr: 7.5e-05                                                         
+│         _name_: rnn                                                           
+│         return_output: true                                                   
+│       _name_: model                                                           
+│       prenorm: false                                                          
+│       transposed: false                                                       
+│       n_layers: 6                                                             
+│       d_model: 384                                                            
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool: null                                                              
+│       norm: batch                                                             
+│       dropout: 0.1                                                            
+│       tie_dropout: false                                                      
+│       track_norms: false                                                      
+│       encoder: null                                                           
+│       decoder: null                                                           
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/accuracy                                                 
+          mode: max                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/accuracy                                                
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        early_stopping:                                                         
+          monitor: val/accuracy                                                 
+          mode: max                                                             
+          patience: 100                                                         
+          min_delta: 0                                                          
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 2222
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230710_212530-2q68hp9l
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run rnn-lin-mnist-new
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/2q68hp9l
+[2023-07-10 21:25:35,381][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-10 21:25:35,382][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-10 21:25:35,385][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-10 21:25:35,387][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-10 21:25:35,388][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>
+[2023-07-10 21:25:35,389][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-10 21:25:35,390][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+NOTE: no dropout inside recurrent cell
+NOTE: no dropout inside recurrent cell
+NOTE: no dropout inside recurrent cell
+NOTE: no dropout inside recurrent cell
+NOTE: no dropout inside recurrent cell
+NOTE: no dropout inside recurrent cell
+SequenceLightningModule(
+  (model): SequenceModel(
+    (drop): Identity()
+    (layers): ModuleList(
+      (0): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.1, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (drop_path): Identity()
+        (gelu): GELU(approximate=none)
+      )
+      (1): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.1, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (drop_path): Identity()
+        (gelu): GELU(approximate=none)
+      )
+      (2): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.1, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (drop_path): Identity()
+        (gelu): GELU(approximate=none)
+      )
+      (3): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.1, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (drop_path): Identity()
+        (gelu): GELU(approximate=none)
+      )
+      (4): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.1, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (drop_path): Identity()
+        (gelu): GELU(approximate=none)
+      )
+      (5): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.1, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (drop_path): Identity()
+        (gelu): GELU(approximate=none)
+      )
+    )
+    (norm): Identity()
+  )
+  (encoder): Linear(
+    (0): Linear(in_features=1, out_features=384, bias=True)
+  )
+  (decoder): SequenceDecoder(
+    (0): SequenceDecoder(
+      (output_transform): Linear(in_features=384, out_features=10, bias=True)
+    )
+  )
+)
+Hyperparameter groups [{'lr': 7.5e-05, 'weight_decay': 0.0}]
+[2023-07-10 21:25:37,072][__main__][INFO] - Optimizer group 0 | 28 tensors | lr 0.0003 | weight_decay 0.05
+[2023-07-10 21:25:37,072][__main__][INFO] - Optimizer group 1 | 12 tensors | lr 7.5e-05 | weight_decay 0.0
+┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃   ┃ Name    ┃ Type            ┃ Params ┃
+┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0 │ model   │ SequenceModel   │  3.5 M │
+│ 1 │ encoder │ Linear          │    768 │
+│ 2 │ decoder │ SequenceDecoder │  3.9 K │
+└───┴─────────┴─────────────────┴────────┘
+Trainable params: 3.6 M                                                         
+Non-trainable params: 0                                                         
+Total params: 3.6 M                                                             
+Total estimated model params size (MB): 14                                      
+SLURM auto-requeueing enabled. Setting signal handlers.
+[2023-07-10 21:25:37,092][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
+[2023-07-10 21:25:37,092][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
+[2023-07-10 21:25:40,700][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
+Epoch 0, global step 1080: 'val/accuracy' reached 0.28983 (best 0.28983), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 0/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:19:00 •       2.97it/s loss: 1.39 v_num:
+                                      0:00:00                  hp9l             
+                                                               val/accuracy:    
+                                                               0.29 val/loss:   
+                                                               2.024            
+                                                               test/accuracy:   
+                                                               0.286 test/loss: 
+                                                               2.013            
+                                                               train/accuracy:  
+                                                               0.335 train/loss:
+                                                               1.875            
+Epoch 1, global step 2160: 'val/accuracy' was not in top 1
+Epoch 1/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:47 •       2.99it/s loss: 1.07 v_num:
+                                      0:00:00                  hp9l             
+                                                               val/accuracy:    
+                                                               0.163 val/loss:  
+                                                               2.71             
+                                                               test/accuracy:   
+                                                               0.161 test/loss: 
+                                                               2.699            
+                                                               train/accuracy:  
+                                                               0.611 train/loss:
+                                                               1.137            
+Epoch 2, global step 3240: 'val/accuracy' was not in top 1
+Epoch 2/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:58 •       2.97it/s loss: 1.34 v_num:
+                                      0:00:00                  hp9l             
+                                                               val/accuracy:    
+                                                               0.192 val/loss:  
+                                                               2.928            
+                                                               test/accuracy:   
+                                                               0.192 test/loss: 
+                                                               2.941            
+                                                               train/accuracy:  
+                                                               0.709 train/loss:
+                                                               0.875            
+Epoch 3, global step 4320: 'val/accuracy' was not in top 1
+Epoch 3/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:57 •       2.99it/s loss: 0.861      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.218 val/loss:  
+                                                               2.919            
+                                                               test/accuracy:   
+                                                               0.216 test/loss: 
+                                                               2.936            
+                                                               train/accuracy:  
+                                                               0.674 train/loss:
+                                                               0.945            
+Epoch 4, global step 5400: 'val/accuracy' was not in top 1
+Epoch 4/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:49 •       2.97it/s loss: 0.74 v_num:
+                                      0:00:00                  hp9l             
+                                                               val/accuracy:    
+                                                               0.272 val/loss:  
+                                                               2.341            
+                                                               test/accuracy:   
+                                                               0.273 test/loss: 
+                                                               2.311            
+                                                               train/accuracy:  
+                                                               0.687 train/loss:
+                                                               0.928            
+Epoch 5, global step 6480: 'val/accuracy' reached 0.51250 (best 0.51250), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 5/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:55 •       2.97it/s loss: 0.429      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.512 val/loss:  
+                                                               1.857            
+                                                               test/accuracy:   
+                                                               0.514 test/loss: 
+                                                               1.81             
+                                                               train/accuracy:  
+                                                               0.841 train/loss:
+                                                               0.52             
+Epoch 6, global step 7560: 'val/accuracy' reached 0.52467 (best 0.52467), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 6/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:59 •       2.97it/s loss: 0.344      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.525 val/loss:  
+                                                               1.922            
+                                                               test/accuracy:   
+                                                               0.519 test/loss: 
+                                                               1.934            
+                                                               train/accuracy:  
+                                                               0.888 train/loss:
+                                                               0.368            
+Epoch 7, global step 8640: 'val/accuracy' reached 0.65383 (best 0.65383), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 7/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:58 •       2.99it/s loss: 0.264      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.654 val/loss:  
+                                                               1.492            
+                                                               test/accuracy:   
+                                                               0.667 test/loss: 
+                                                               1.442            
+                                                               train/accuracy:  
+                                                               0.909 train/loss:
+                                                               0.298            
+Epoch 8, global step 9720: 'val/accuracy' reached 0.77883 (best 0.77883), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 8/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:58 •       2.98it/s loss: 0.259      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.779 val/loss:  
+                                                               0.827            
+                                                               test/accuracy:   
+                                                               0.786 test/loss: 
+                                                               0.761            
+                                                               train/accuracy:  
+                                                               0.919 train/loss:
+                                                               0.26             
+Epoch 9, global step 10800: 'val/accuracy' was not in top 1
+Epoch 9/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.99it/s loss: 0.214      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.685 val/loss:  
+                                                               1.115            
+                                                               test/accuracy:   
+                                                               0.703 test/loss: 
+                                                               1.041            
+                                                               train/accuracy:  
+                                                               0.929 train/loss:
+                                                               0.229            
+Epoch 10, global step 11880: 'val/accuracy' was not in top 1
+Epoch 10/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       3.00it/s loss: 0.211      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.642 val/loss:  
+                                                               1.557            
+                                                               test/accuracy:   
+                                                               0.65 test/loss:  
+                                                               1.536            
+                                                               train/accuracy:  
+                                                               0.933 train/loss:
+                                                               0.212            
+Epoch 11, global step 12960: 'val/accuracy' reached 0.84917 (best 0.84917), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 11/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:54 •       2.98it/s loss: 0.164      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.849 val/loss:  
+                                                               0.625            
+                                                               test/accuracy:   
+                                                               0.854 test/loss: 
+                                                               0.596            
+                                                               train/accuracy:  
+                                                               0.939 train/loss:
+                                                               0.19             
+Epoch 12, global step 14040: 'val/accuracy' reached 0.86617 (best 0.86617), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 12/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:55 •       2.96it/s loss: 0.148      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.866 val/loss:  
+                                                               0.47             
+                                                               test/accuracy:   
+                                                               0.869 test/loss: 
+                                                               0.454            
+                                                               train/accuracy:  
+                                                               0.946 train/loss:
+                                                               0.171            
+Epoch 13, global step 15120: 'val/accuracy' was not in top 1
+Epoch 13/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:58 •       2.95it/s loss: 0.121      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.773 val/loss:  
+                                                               0.852            
+                                                               test/accuracy:   
+                                                               0.787 test/loss: 
+                                                               0.792            
+                                                               train/accuracy:  
+                                                               0.951 train/loss:
+                                                               0.154            
+Epoch 14, global step 16200: 'val/accuracy' was not in top 1
+Epoch 14/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:55 •       2.98it/s loss: 0.136      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.856 val/loss:  
+                                                               0.503            
+                                                               test/accuracy:   
+                                                               0.861 test/loss: 
+                                                               0.479            
+                                                               train/accuracy:  
+                                                               0.954 train/loss:
+                                                               0.147            
+Epoch 15, global step 17280: 'val/accuracy' reached 0.88717 (best 0.88717), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 15/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:54 •       2.97it/s loss: 0.149      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.887 val/loss:  
+                                                               0.396            
+                                                               test/accuracy:   
+                                                               0.891 test/loss: 
+                                                               0.368            
+                                                               train/accuracy:  
+                                                               0.956 train/loss:
+                                                               0.136            
+Epoch 16, global step 18360: 'val/accuracy' reached 0.92533 (best 0.92533), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 16/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:57 •       2.95it/s loss: 0.101      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.925 val/loss:  
+                                                               0.271            
+                                                               test/accuracy:   
+                                                               0.928 test/loss: 
+                                                               0.258            
+                                                               train/accuracy:  
+                                                               0.96 train/loss: 
+                                                               0.125            
+Epoch 17, global step 19440: 'val/accuracy' was not in top 1
+Epoch 17/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.99it/s loss: 0.124      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.813 val/loss:  
+                                                               0.69             
+                                                               test/accuracy:   
+                                                               0.824 test/loss: 
+                                                               0.641            
+                                                               train/accuracy:  
+                                                               0.963 train/loss:
+                                                               0.118            
+Epoch 18, global step 20520: 'val/accuracy' was not in top 1
+Epoch 18/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:57 •       2.99it/s loss: 0.138      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.849 val/loss:  
+                                                               0.537            
+                                                               test/accuracy:   
+                                                               0.853 test/loss: 
+                                                               0.504            
+                                                               train/accuracy:  
+                                                               0.964 train/loss:
+                                                               0.113            
+Epoch 19, global step 21600: 'val/accuracy' was not in top 1
+Epoch 19/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.99it/s loss: 0.109      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.918 val/loss:  
+                                                               0.342            
+                                                               test/accuracy:   
+                                                               0.917 test/loss: 
+                                                               0.32             
+                                                               train/accuracy:  
+                                                               0.967 train/loss:
+                                                               0.103            
+Epoch 20, global step 22680: 'val/accuracy' was not in top 1
+Epoch 20/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:58 •       2.95it/s loss: 0.0924     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.856 val/loss:  
+                                                               0.537            
+                                                               test/accuracy:   
+                                                               0.859 test/loss: 
+                                                               0.519            
+                                                               train/accuracy:  
+                                                               0.968 train/loss:
+                                                               0.101            
+Epoch 21, global step 23760: 'val/accuracy' was not in top 1
+Epoch 21/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.96it/s loss: 0.108      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.888 val/loss:  
+                                                               0.408            
+                                                               test/accuracy:   
+                                                               0.891 test/loss: 
+                                                               0.381            
+                                                               train/accuracy:  
+                                                               0.969 train/loss:
+                                                               0.095            
+Epoch 22, global step 24840: 'val/accuracy' was not in top 1
+Epoch 22/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.96it/s loss: 0.0955     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.891 val/loss:  
+                                                               0.398            
+                                                               test/accuracy:   
+                                                               0.902 test/loss: 
+                                                               0.345            
+                                                               train/accuracy:  
+                                                               0.972 train/loss:
+                                                               0.088            
+Epoch 23, global step 25920: 'val/accuracy' was not in top 1
+Epoch 23/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:52 •       2.98it/s loss: 0.0854     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.901 val/loss:  
+                                                               0.356            
+                                                               test/accuracy:   
+                                                               0.913 test/loss: 
+                                                               0.306            
+                                                               train/accuracy:  
+                                                               0.971 train/loss:
+                                                               0.09             
+Epoch 24, global step 27000: 'val/accuracy' was not in top 1
+Epoch 24/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:58 •       2.98it/s loss: 0.109      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.889 val/loss:  
+                                                               0.402            
+                                                               test/accuracy:   
+                                                               0.887 test/loss: 
+                                                               0.385            
+                                                               train/accuracy:  
+                                                               0.973 train/loss:
+                                                               0.083            
+Epoch 25, global step 28080: 'val/accuracy' was not in top 1
+Epoch 25/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:55 •       2.99it/s loss: 0.0646     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.91 val/loss:   
+                                                               0.36             
+                                                               test/accuracy:   
+                                                               0.913 test/loss: 
+                                                               0.337            
+                                                               train/accuracy:  
+                                                               0.975 train/loss:
+                                                               0.076            
+Epoch 26, global step 29160: 'val/accuracy' was not in top 1
+Epoch 26/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:54 •       2.98it/s loss: 0.112      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.922 val/loss:  
+                                                               0.299            
+                                                               test/accuracy:   
+                                                               0.924 test/loss: 
+                                                               0.271            
+                                                               train/accuracy:  
+                                                               0.975 train/loss:
+                                                               0.075            
+Epoch 27, global step 30240: 'val/accuracy' reached 0.95617 (best 0.95617), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 27/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.98it/s loss: 0.0797     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.956 val/loss:  
+                                                               0.177            
+                                                               test/accuracy:   
+                                                               0.957 test/loss: 
+                                                               0.161            
+                                                               train/accuracy:  
+                                                               0.976 train/loss:
+                                                               0.073            
+Epoch 28, global step 31320: 'val/accuracy' was not in top 1
+Epoch 28/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:54 •       2.96it/s loss: 0.0569     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.84 val/loss:   
+                                                               0.606            
+                                                               test/accuracy:   
+                                                               0.848 test/loss: 
+                                                               0.575            
+                                                               train/accuracy:  
+                                                               0.978 train/loss:
+                                                               0.067            
+Epoch 29, global step 32400: 'val/accuracy' was not in top 1
+Epoch 29/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:57 •       2.96it/s loss: 0.0628     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.873 val/loss:  
+                                                               0.537            
+                                                               test/accuracy:   
+                                                               0.876 test/loss: 
+                                                               0.491            
+                                                               train/accuracy:  
+                                                               0.979 train/loss:
+                                                               0.066            
+Epoch 30, global step 33480: 'val/accuracy' was not in top 1
+Epoch 30/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:59 •       2.97it/s loss: 0.0593     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.915 val/loss:  
+                                                               0.343            
+                                                               test/accuracy:   
+                                                               0.915 test/loss: 
+                                                               0.34             
+                                                               train/accuracy:  
+                                                               0.98 train/loss: 
+                                                               0.06             
+Epoch 31, global step 34560: 'val/accuracy' was not in top 1
+Epoch 31/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:56 •       2.98it/s loss: 0.0527     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.927 val/loss:  
+                                                               0.295            
+                                                               test/accuracy:   
+                                                               0.928 test/loss: 
+                                                               0.273            
+                                                               train/accuracy:  
+                                                               0.98 train/loss: 
+                                                               0.06             
+Epoch 32, global step 35640: 'val/accuracy' was not in top 1
+Epoch 32/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:20 •       3.10it/s loss: 0.0581     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.883 val/loss:  
+                                                               0.461            
+                                                               test/accuracy:   
+                                                               0.891 test/loss: 
+                                                               0.412            
+                                                               train/accuracy:  
+                                                               0.98 train/loss: 
+                                                               0.058            
+Epoch 33, global step 36720: 'val/accuracy' was not in top 1
+Epoch 33/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:16 •       3.07it/s loss: 0.0587     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.929 val/loss:  
+                                                               0.287            
+                                                               test/accuracy:   
+                                                               0.935 test/loss: 
+                                                               0.259            
+                                                               train/accuracy:  
+                                                               0.982 train/loss:
+                                                               0.054            
+Epoch 34, global step 37800: 'val/accuracy' was not in top 1
+Epoch 34/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:18 •       3.09it/s loss: 0.0456     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.946 val/loss:  
+                                                               0.208            
+                                                               test/accuracy:   
+                                                               0.947 test/loss: 
+                                                               0.191            
+                                                               train/accuracy:  
+                                                               0.982 train/loss:
+                                                               0.052            
+Epoch 35, global step 38880: 'val/accuracy' was not in top 1
+Epoch 35/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:18 •       3.07it/s loss: 0.043      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.923 val/loss:  
+                                                               0.322            
+                                                               test/accuracy:   
+                                                               0.916 test/loss: 
+                                                               0.331            
+                                                               train/accuracy:  
+                                                               0.982 train/loss:
+                                                               0.053            
+Epoch 36, global step 39960: 'val/accuracy' reached 0.95717 (best 0.95717), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 36/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:20 •       2.95it/s loss: 0.0473     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.957 val/loss:  
+                                                               0.175            
+                                                               test/accuracy:   
+                                                               0.962 test/loss: 
+                                                               0.153            
+                                                               train/accuracy:  
+                                                               0.984 train/loss:
+                                                               0.048            
+Epoch 37, global step 41040: 'val/accuracy' reached 0.96317 (best 0.96317), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 37/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:17 •       3.05it/s loss: 0.0492     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.963 val/loss:  
+                                                               0.162            
+                                                               test/accuracy:   
+                                                               0.963 test/loss: 
+                                                               0.139            
+                                                               train/accuracy:  
+                                                               0.983 train/loss:
+                                                               0.05             
+Epoch 38, global step 42120: 'val/accuracy' was not in top 1
+Epoch 38/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:20 •       3.06it/s loss: 0.0531     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.874 val/loss:  
+                                                               0.495            
+                                                               test/accuracy:   
+                                                               0.884 test/loss: 
+                                                               0.473            
+                                                               train/accuracy:  
+                                                               0.986 train/loss:
+                                                               0.043            
+Epoch 39, global step 43200: 'val/accuracy' was not in top 1
+Epoch 39/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:18 •       3.06it/s loss: 0.049      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.956 val/loss:  
+                                                               0.181            
+                                                               test/accuracy:   
+                                                               0.956 test/loss: 
+                                                               0.158            
+                                                               train/accuracy:  
+                                                               0.986 train/loss:
+                                                               0.042            
+Epoch 40, global step 44280: 'val/accuracy' was not in top 1
+Epoch 40/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:18 •       3.07it/s loss: 0.0323     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.944 val/loss:  
+                                                               0.25             
+                                                               test/accuracy:   
+                                                               0.949 test/loss: 
+                                                               0.211            
+                                                               train/accuracy:  
+                                                               0.986 train/loss:
+                                                               0.041            
+Epoch 41, global step 45360: 'val/accuracy' was not in top 1
+Epoch 41/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:20 •       3.08it/s loss: 0.0324     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.962 val/loss:  
+                                                               0.155            
+                                                               test/accuracy:   
+                                                               0.966 test/loss: 
+                                                               0.123            
+                                                               train/accuracy:  
+                                                               0.986 train/loss:
+                                                               0.041            
+Epoch 42, global step 46440: 'val/accuracy' was not in top 1
+Epoch 42/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:23 •       3.05it/s loss: 0.0386     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.937 val/loss:  
+                                                               0.308            
+                                                               test/accuracy:   
+                                                               0.936 test/loss: 
+                                                               0.279            
+                                                               train/accuracy:  
+                                                               0.989 train/loss:
+                                                               0.035            
+Epoch 43, global step 47520: 'val/accuracy' was not in top 1
+Epoch 43/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:19 •       3.07it/s loss: 0.04 v_num:
+                                      0:00:00                  hp9l             
+                                                               val/accuracy:    
+                                                               0.934 val/loss:  
+                                                               0.287            
+                                                               test/accuracy:   
+                                                               0.935 test/loss: 
+                                                               0.263            
+                                                               train/accuracy:  
+                                                               0.987 train/loss:
+                                                               0.04             
+Epoch 44, global step 48600: 'val/accuracy' was not in top 1
+Epoch 44/99 ━━━━━━━━━━━━━━━ 1400/1400 0:18:16 •       3.05it/s loss: 0.0453     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.961 val/loss:  
+                                                               0.151            
+                                                               test/accuracy:   
+                                                               0.962 test/loss: 
+                                                               0.149            
+                                                               train/accuracy:  
+                                                               0.988 train/loss:
+                                                               0.034            
+Epoch 45, global step 49680: 'val/accuracy' was not in top 1
+Epoch 45/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:00 •       2.93it/s loss: 0.0263     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.944 val/loss:  
+                                                               0.246            
+                                                               test/accuracy:   
+                                                               0.946 test/loss: 
+                                                               0.209            
+                                                               train/accuracy:  
+                                                               0.989 train/loss:
+                                                               0.034            
+Epoch 46, global step 50760: 'val/accuracy' was not in top 1
+Epoch 46/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:13 •       2.90it/s loss: 0.0365     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.956 val/loss:  
+                                                               0.194            
+                                                               test/accuracy:   
+                                                               0.961 test/loss: 
+                                                               0.166            
+                                                               train/accuracy:  
+                                                               0.99 train/loss: 
+                                                               0.031            
+Epoch 47, global step 51840: 'val/accuracy' was not in top 1
+Epoch 47/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.90it/s loss: 0.0293     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.946 val/loss:  
+                                                               0.237            
+                                                               test/accuracy:   
+                                                               0.951 test/loss: 
+                                                               0.193            
+                                                               train/accuracy:  
+                                                               0.99 train/loss: 
+                                                               0.031            
+Epoch 48, global step 52920: 'val/accuracy' was not in top 1
+Epoch 48/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:24 •       2.91it/s loss: 0.04 v_num:
+                                      0:00:00                  hp9l             
+                                                               val/accuracy:    
+                                                               0.908 val/loss:  
+                                                               0.395            
+                                                               test/accuracy:   
+                                                               0.912 test/loss: 
+                                                               0.353            
+                                                               train/accuracy:  
+                                                               0.99 train/loss: 
+                                                               0.029            
+Epoch 49, global step 54000: 'val/accuracy' was not in top 1
+Epoch 49/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:17 •       2.90it/s loss: 0.0335     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.952 val/loss:  
+                                                               0.201            
+                                                               test/accuracy:   
+                                                               0.954 test/loss: 
+                                                               0.187            
+                                                               train/accuracy:  
+                                                               0.991 train/loss:
+                                                               0.027            
+Epoch 50, global step 55080: 'val/accuracy' was not in top 1
+Epoch 50/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.95it/s loss: 0.0237     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.959 val/loss:  
+                                                               0.172            
+                                                               test/accuracy:   
+                                                               0.962 test/loss: 
+                                                               0.151            
+                                                               train/accuracy:  
+                                                               0.992 train/loss:
+                                                               0.025            
+Epoch 51, global step 56160: 'val/accuracy' was not in top 1
+Epoch 51/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.92it/s loss: 0.0286     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.945 val/loss:  
+                                                               0.232            
+                                                               test/accuracy:   
+                                                               0.949 test/loss: 
+                                                               0.209            
+                                                               train/accuracy:  
+                                                               0.992 train/loss:
+                                                               0.024            
+Epoch 52, global step 57240: 'val/accuracy' was not in top 1
+Epoch 52/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:22 •       2.96it/s loss: 0.0321     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.961 val/loss:  
+                                                               0.18             
+                                                               test/accuracy:   
+                                                               0.964 test/loss: 
+                                                               0.145            
+                                                               train/accuracy:  
+                                                               0.992 train/loss:
+                                                               0.024            
+Epoch 53, global step 58320: 'val/accuracy' reached 0.96550 (best 0.96550), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 53/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:22 •       2.88it/s loss: 0.0333     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.965 val/loss:  
+                                                               0.161            
+                                                               test/accuracy:   
+                                                               0.968 test/loss: 
+                                                               0.138            
+                                                               train/accuracy:  
+                                                               0.993 train/loss:
+                                                               0.022            
+Epoch 54, global step 59400: 'val/accuracy' was not in top 1
+Epoch 54/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:18 •       2.89it/s loss: 0.023      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.96 val/loss:   
+                                                               0.18             
+                                                               test/accuracy:   
+                                                               0.961 test/loss: 
+                                                               0.16             
+                                                               train/accuracy:  
+                                                               0.993 train/loss:
+                                                               0.021            
+Epoch 55, global step 60480: 'val/accuracy' was not in top 1
+Epoch 55/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:21 •       2.83it/s loss: 0.0338     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.953 val/loss:  
+                                                               0.215            
+                                                               test/accuracy:   
+                                                               0.95 test/loss:  
+                                                               0.202            
+                                                               train/accuracy:  
+                                                               0.993 train/loss:
+                                                               0.02             
+Epoch 56, global step 61560: 'val/accuracy' was not in top 1
+Epoch 56/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:14 •       2.79it/s loss: 0.0215     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.953 val/loss:  
+                                                               0.209            
+                                                               test/accuracy:   
+                                                               0.955 test/loss: 
+                                                               0.19             
+                                                               train/accuracy:  
+                                                               0.994 train/loss:
+                                                               0.017            
+Epoch 57, global step 62640: 'val/accuracy' was not in top 1
+Epoch 57/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:21 •       2.82it/s loss: 0.0174     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.964 val/loss:  
+                                                               0.162            
+                                                               test/accuracy:   
+                                                               0.967 test/loss: 
+                                                               0.145            
+                                                               train/accuracy:  
+                                                               0.994 train/loss:
+                                                               0.018            
+Epoch 58, global step 63720: 'val/accuracy' was not in top 1
+Epoch 58/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:17 •       2.90it/s loss: 0.0136     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.947 val/loss:  
+                                                               0.245            
+                                                               test/accuracy:   
+                                                               0.948 test/loss: 
+                                                               0.229            
+                                                               train/accuracy:  
+                                                               0.994 train/loss:
+                                                               0.018            
+Epoch 59, global step 64800: 'val/accuracy' was not in top 1
+Epoch 59/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:24 •       2.90it/s loss: 0.029      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.961 val/loss:  
+                                                               0.175            
+                                                               test/accuracy:   
+                                                               0.964 test/loss: 
+                                                               0.163            
+                                                               train/accuracy:  
+                                                               0.995 train/loss:
+                                                               0.016            
+Epoch 60, global step 65880: 'val/accuracy' reached 0.96750 (best 0.96750), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 60/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:22 •       2.85it/s loss: 0.0252     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.967 val/loss:  
+                                                               0.151            
+                                                               test/accuracy:   
+                                                               0.969 test/loss: 
+                                                               0.133            
+                                                               train/accuracy:  
+                                                               0.995 train/loss:
+                                                               0.014            
+Epoch 61, global step 66960: 'val/accuracy' was not in top 1
+Epoch 61/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:20 •       2.93it/s loss: 0.0188     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.957 val/loss:  
+                                                               0.197            
+                                                               test/accuracy:   
+                                                               0.961 test/loss: 
+                                                               0.173            
+                                                               train/accuracy:  
+                                                               0.995 train/loss:
+                                                               0.015            
+Epoch 62, global step 68040: 'val/accuracy' reached 0.96883 (best 0.96883), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 62/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.90it/s loss: 0.0115     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.969 val/loss:  
+                                                               0.153            
+                                                               test/accuracy:   
+                                                               0.972 test/loss: 
+                                                               0.129            
+                                                               train/accuracy:  
+                                                               0.996 train/loss:
+                                                               0.013            
+Epoch 63, global step 69120: 'val/accuracy' was not in top 1
+Epoch 63/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:29 •       2.88it/s loss: 0.0113     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.968 val/loss:  
+                                                               0.153            
+                                                               test/accuracy:   
+                                                               0.972 test/loss: 
+                                                               0.13             
+                                                               train/accuracy:  
+                                                               0.996 train/loss:
+                                                               0.012            
+Epoch 64, global step 70200: 'val/accuracy' was not in top 1
+Epoch 64/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.91it/s loss: 0.016      
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.966 val/loss:  
+                                                               0.175            
+                                                               test/accuracy:   
+                                                               0.968 test/loss: 
+                                                               0.153            
+                                                               train/accuracy:  
+                                                               0.996 train/loss:
+                                                               0.011            
+Epoch 65, global step 71280: 'val/accuracy' reached 0.96900 (best 0.96900), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 65/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.97it/s loss: 0.0157     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.969 val/loss:  
+                                                               0.144            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.122            
+                                                               train/accuracy:  
+                                                               0.996 train/loss:
+                                                               0.012            
+Epoch 66, global step 72360: 'val/accuracy' was not in top 1
+Epoch 66/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.88it/s loss: 0.0147     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.963 val/loss:  
+                                                               0.183            
+                                                               test/accuracy:   
+                                                               0.965 test/loss: 
+                                                               0.166            
+                                                               train/accuracy:  
+                                                               0.997 train/loss:
+                                                               0.01             
+Epoch 67, global step 73440: 'val/accuracy' reached 0.97083 (best 0.97083), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 67/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:25 •       2.91it/s loss: 0.00405    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.151            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.131            
+                                                               train/accuracy:  
+                                                               0.997 train/loss:
+                                                               0.01             
+Epoch 68, global step 74520: 'val/accuracy' was not in top 1
+Epoch 68/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:25 •       2.90it/s loss: 0.0154     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.964 val/loss:  
+                                                               0.18             
+                                                               test/accuracy:   
+                                                               0.962 test/loss: 
+                                                               0.176            
+                                                               train/accuracy:  
+                                                               0.997 train/loss:
+                                                               0.009            
+Epoch 69, global step 75600: 'val/accuracy' was not in top 1
+Epoch 69/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:25 •       2.90it/s loss: 0.0183     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.958 val/loss:  
+                                                               0.236            
+                                                               test/accuracy:   
+                                                               0.957 test/loss: 
+                                                               0.223            
+                                                               train/accuracy:  
+                                                               0.997 train/loss:
+                                                               0.009            
+Epoch 70, global step 76680: 'val/accuracy' was not in top 1
+Epoch 70/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:24 •       2.92it/s loss: 0.0092     
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.97 val/loss:   
+                                                               0.157            
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.133            
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.007            
+Epoch 71, global step 77760: 'val/accuracy' was not in top 1
+Epoch 71/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:26 •       2.92it/s loss: 0.00691    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.965 val/loss:  
+                                                               0.182            
+                                                               test/accuracy:   
+                                                               0.966 test/loss: 
+                                                               0.169            
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.007            
+Epoch 72, global step 78840: 'val/accuracy' was not in top 1
+Epoch 72/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:18 •       2.92it/s loss: 0.00605    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.966 val/loss:  
+                                                               0.187            
+                                                               test/accuracy:   
+                                                               0.966 test/loss: 
+                                                               0.161            
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.007            
+Epoch 73, global step 79920: 'val/accuracy' reached 0.97233 (best 0.97233), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 73/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.90it/s loss: 0.00647    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.972 val/loss:  
+                                                               0.141            
+                                                               test/accuracy:   
+                                                               0.97 test/loss:  
+                                                               0.13             
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.007            
+Epoch 74, global step 81000: 'val/accuracy' was not in top 1
+Epoch 74/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:21 •       2.88it/s loss: 0.00658    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.16             
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.138            
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.006            
+Epoch 75, global step 82080: 'val/accuracy' was not in top 1
+Epoch 75/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:21 •       2.90it/s loss: 0.00155    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.164            
+                                                               test/accuracy:   
+                                                               0.97 test/loss:  
+                                                               0.152            
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.005            
+Epoch 76, global step 83160: 'val/accuracy' was not in top 1
+Epoch 76/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.88it/s loss: 0.00793    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.967 val/loss:  
+                                                               0.178            
+                                                               test/accuracy:   
+                                                               0.968 test/loss: 
+                                                               0.158            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.005            
+Epoch 77, global step 84240: 'val/accuracy' was not in top 1
+Epoch 77/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.92it/s loss: 0.00498    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.963 val/loss:  
+                                                               0.209            
+                                                               test/accuracy:   
+                                                               0.965 test/loss: 
+                                                               0.173            
+                                                               train/accuracy:  
+                                                               0.998 train/loss:
+                                                               0.005            
+Epoch 78, global step 85320: 'val/accuracy' was not in top 1
+Epoch 78/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:25 •       2.94it/s loss: 0.00191    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.165            
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.141            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.004            
+Epoch 79, global step 86400: 'val/accuracy' reached 0.97317 (best 0.97317), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 79/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.93it/s loss: 0.00562    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.973 val/loss:  
+                                                               0.152            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.137            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.004            
+Epoch 80, global step 87480: 'val/accuracy' reached 0.97417 (best 0.97417), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-10/21-25-28-899902/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 80/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.87it/s loss: 0.00529    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.974 val/loss:  
+                                                               0.152            
+                                                               test/accuracy:   
+                                                               0.975 test/loss: 
+                                                               0.13             
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.004            
+Epoch 81, global step 88560: 'val/accuracy' was not in top 1
+Epoch 81/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:22 •       2.96it/s loss: 0.00103    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.966 val/loss:  
+                                                               0.187            
+                                                               test/accuracy:   
+                                                               0.968 test/loss: 
+                                                               0.172            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.003            
+Epoch 82, global step 89640: 'val/accuracy' was not in top 1
+Epoch 82/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:17 •       2.94it/s loss: 0.00242    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.97 val/loss:   
+                                                               0.17             
+                                                               test/accuracy:   
+                                                               0.97 test/loss:  
+                                                               0.157            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.003            
+Epoch 83, global step 90720: 'val/accuracy' was not in top 1
+Epoch 83/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:18 •       2.89it/s loss: 0.00216    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.97 val/loss:   
+                                                               0.166            
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.15             
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.003            
+Epoch 84, global step 91800: 'val/accuracy' was not in top 1
+Epoch 84/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.90it/s loss: 0.00244    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.159            
+                                                               test/accuracy:   
+                                                               0.974 test/loss: 
+                                                               0.136            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.003            
+Epoch 85, global step 92880: 'val/accuracy' was not in top 1
+Epoch 85/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:21 •       2.86it/s loss: 0.00217    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.969 val/loss:  
+                                                               0.177            
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.151            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.003            
+Epoch 86, global step 93960: 'val/accuracy' was not in top 1
+Epoch 86/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:22 •       2.89it/s loss: 0.00226    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.97 val/loss:   
+                                                               0.172            
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.148            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.002            
+Epoch 87, global step 95040: 'val/accuracy' was not in top 1
+Epoch 87/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:24 •       2.90it/s loss: 0.00295    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.972 val/loss:  
+                                                               0.161            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.144            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.002            
+Epoch 88, global step 96120: 'val/accuracy' was not in top 1
+Epoch 88/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:24 •       2.91it/s loss: 0.00138    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.968 val/loss:  
+                                                               0.18             
+                                                               test/accuracy:   
+                                                               0.97 test/loss:  
+                                                               0.156            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.002            
+Epoch 89, global step 97200: 'val/accuracy' was not in top 1
+Epoch 89/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:22 •       2.90it/s loss: 0.00105    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.969 val/loss:  
+                                                               0.176            
+                                                               test/accuracy:   
+                                                               0.971 test/loss: 
+                                                               0.153            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.002            
+Epoch 90, global step 98280: 'val/accuracy' was not in top 1
+Epoch 90/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:20 •       2.91it/s loss: 0.00155    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.97 val/loss:   
+                                                               0.174            
+                                                               test/accuracy:   
+                                                               0.972 test/loss: 
+                                                               0.15             
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.002            
+Epoch 91, global step 99360: 'val/accuracy' was not in top 1
+Epoch 91/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:26 •       2.89it/s loss: 0.000871   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.169            
+                                                               test/accuracy:   
+                                                               0.972 test/loss: 
+                                                               0.151            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.002            
+Epoch 92, global step 100440: 'val/accuracy' was not in top 1
+Epoch 92/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:18 •       2.94it/s loss: 0.000759   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.163            
+                                                               test/accuracy:   
+                                                               0.974 test/loss: 
+                                                               0.142            
+                                                               train/accuracy:  
+                                                               0.999 train/loss:
+                                                               0.002            
+Epoch 93, global step 101520: 'val/accuracy' was not in top 1
+Epoch 93/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:17 •       2.91it/s loss: 0.00262    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.972 val/loss:  
+                                                               0.164            
+                                                               test/accuracy:   
+                                                               0.974 test/loss: 
+                                                               0.146            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.001            
+Epoch 94, global step 102600: 'val/accuracy' was not in top 1
+Epoch 94/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.95it/s loss: 0.00151    
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.169            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.151            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.001            
+Epoch 95, global step 103680: 'val/accuracy' was not in top 1
+Epoch 95/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:23 •       2.96it/s loss: 0.000696   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.17             
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.152            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.001            
+Epoch 96, global step 104760: 'val/accuracy' was not in top 1
+Epoch 96/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:24 •       2.87it/s loss: 0.000396   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.971 val/loss:  
+                                                               0.175            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.155            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.001            
+Epoch 97, global step 105840: 'val/accuracy' was not in top 1
+Epoch 97/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:11 •       2.93it/s loss: 0.000904   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.973 val/loss:  
+                                                               0.158            
+                                                               test/accuracy:   
+                                                               0.975 test/loss: 
+                                                               0.141            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.001            
+Epoch 98, global step 106920: 'val/accuracy' was not in top 1
+Epoch 98/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:17 •       2.94it/s loss: 0.000759   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.972 val/loss:  
+                                                               0.161            
+                                                               test/accuracy:   
+                                                               0.973 test/loss: 
+                                                               0.145            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.001            
+Epoch 99, global step 108000: 'val/accuracy' was not in top 1
+`Trainer.fit` stopped: `max_epochs=100` reached.
+Epoch 99/99 ━━━━━━━━━━━━━━━ 1400/1400 0:19:19 •       2.90it/s loss: 0.000787   
+                                      0:00:00                  v_num: hp9l      
+                                                               val/accuracy:    
+                                                               0.972 val/loss:  
+                                                               0.162            
+                                                               test/accuracy:   
+                                                               0.975 test/loss: 
+                                                               0.144            
+                                                               train/accuracy:  
+                                                               1.0 train/loss:  
+                                                               0.002            
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
+wandb:       test/accuracy ▂▁▄▅▅▇▇▇▇▇▇█▇█▇▇███▇████████████████████
+wandb:           test/loss ▆█▅▄▅▂▂▂▂▂▂▁▂▁▂▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         timer/epoch ▅▅▅▅▅▅▅▅▅▅▅▅▅▁▁▁▁▁▅█▇▇▇▇▇█▇██▇▇█▇▇▇██▇█▇
+wandb:          timer/step ▂▂▆▂▃▂▂▂▂▂▂▂▃▂▂▁▂▂▂▄█▂▃▅▃▇▃▂▃▄▂▃▃▂▂▃▃▁▂▃
+wandb:    timer/validation ▁████████████▇██████████████████████████
+wandb:      train/accuracy ▁▅▆▇▇▇██████████████████████████████████
+wandb:          train/loss █▄▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:       trainer/epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:        trainer/loss █▅▂▃▂▂▂▁▁▂▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      trainer/lr/pg1 ▂▃▅▇██████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▂▁▁▁▁▁▁
+wandb:      trainer/lr/pg2 ▂▃▅▇██████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▂▁▁▁▁▁▁
+wandb:        val/accuracy ▂▁▄▅▅▇▇▇▇▇▇█▇██▇███▇████████████████████
+wandb:            val/loss ▆█▅▄▅▂▂▂▂▂▂▁▂▁▁▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:               epoch 99
+wandb:       test/accuracy 0.9746
+wandb:           test/loss 0.14382
+wandb:         timer/epoch 1159.15753
+wandb:          timer/step 0.96125
+wandb:    timer/validation 110.63598
+wandb:      train/accuracy 0.99956
+wandb:          train/loss 0.00158
+wandb:       trainer/epoch 99.0
+wandb: trainer/global_step 107999
+wandb:        trainer/loss 0.00018
+wandb:      trainer/lr/pg1 0.0
+wandb:      trainer/lr/pg2 0.0
+wandb:        val/accuracy 0.97167
+wandb:            val/loss 0.16177
+wandb: 
+wandb: 🚀 View run rnn-lin-mnist-new at: https://wandb.ai/yuqinzhou/TNLM/runs/2q68hp9l
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230710_212530-2q68hp9l/logs

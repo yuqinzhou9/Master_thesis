@@ -11,6 +11,8 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import wandb
+from torchinfo import summary
+
 from hydra.utils import get_original_cwd
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.loggers import WandbLogger
@@ -681,7 +683,8 @@ def train(config):
     
     trainer = create_trainer(config)
     model = SequenceLightningModule(config)
-
+    print(model)
+    
     # Run initial validation epoch (useful for debugging, finetuning)
     if config.train.validate_at_start:
         print("Running validation before training")

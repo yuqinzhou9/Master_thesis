@@ -9,23 +9,25 @@ defaults:
 
 
 model:
-  dropout: 0.1
-  tie_dropout: false #true
+  dropout: 0.2
+  tie_dropout: true
   n_layers: 6 
   d_model: 384 
+  pool: null
   prenorm: False
   transposed: False
   norm: batch #defaul = layer
   layer:
     cell:
       d_input: 384
-      lr: 0.000075
+      lr: 7.5e-5
+  track_norms: false 
 
 loader:
   batch_size: 50
 
 optimizer:
-  lr: 0.0003
+  lr: 3e-4
   weight_decay: 0.05
 
 trainer:

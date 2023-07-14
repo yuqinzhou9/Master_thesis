@@ -1,0 +1,228 @@
+CONFIG
+├── train
+│   └── seed: 1111                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/loss                                                       
+│       mode: min                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: s4-wt103                                                          
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       devices: 8                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 1000                                                        
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       precision: 16                                                           
+│       enable_model_summary: false                                             
+│       track_grad_norm: -1                                                     
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       replace_sampler_ddp: false                                              
+│                                                                               
+├── loader
+│   └── batch_first: true                                                       
+│       batch_size: 1                                                           
+│       l_max: 8192                                                             
+│       pad_last: false                                                         
+│       n_context: 1                                                            
+│       n_epoch_double: 0                                                       
+│       limit_tokens: 1.0                                                       
+│       eval:                                                                   
+│         l_max: null                                                           
+│         batch_size: null                                                      
+│                                                                               
+├── dataset
+│   └── _name_: wt103                                                           
+│       data_dir: null                                                          
+│       bpe: false                                                              
+│       roll_seed: 42                                                           
+│       test_split: true                                                        
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 0.0005                                                              
+│       weight_decay: 0.1                                                       
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 1000                                                  
+│       num_training_steps: 800000                                              
+│                                                                               
+├── task
+│   └── _name_: adaptivelm                                                      
+│       init_scale: 0.5                                                         
+│       bias_scale: 1.0                                                         
+│       div_val: 4                                                              
+│       cutoffs:                                                                
+│       - 19997                                                                 
+│       - 39997                                                                 
+│       - 199997                                                                
+│       tie_weights: true                                                       
+│       tie_projs:                                                              
+│       - true                                                                  
+│       - true                                                                  
+│       - true                                                                  
+│       dropemb: 0.25                                                           
+│       dropsoft: 0.25                                                          
+│       loss: null                                                              
+│       metrics:                                                                
+│       - ppl                                                                   
+│                                                                               
+├── encoder
+│   └── None                                                                    
+├── decoder
+│   └── sequence                                                                
+├── model
+│   └── layer:                                                                  
+│       - _name_: s4                                                            
+│         l_max: 8192                                                           
+│         final_act: glu                                                        
+│         dropout: 0.25                                                         
+│         lr: 0.0005                                                            
+│         n_ssm: 1                                                              
+│       - _name_: s4                                                            
+│         l_max: 8192                                                           
+│         final_act: glu                                                        
+│         dropout: 0.25                                                         
+│         lr: 0.0005                                                            
+│         n_ssm: 1                                                              
+│       - _name_: ffn                                                           
+│         expand: 4                                                             
+│         activation: gelu                                                      
+│         dropout: 0.25                                                         
+│       _name_: model                                                           
+│       prenorm: true                                                           
+│       transposed: false                                                       
+│       n_layers: 1                                                             
+│       d_model: 1024                                                           
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool:                                                                   
+│         _name_: pool                                                          
+│         stride: 1                                                             
+│         expand: null                                                          
+│       norm: layer                                                             
+│       dropout: 0.25                                                           
+│       tie_dropout: false                                                      
+│       track_norms: true                                                       
+│       encoder: null                                                           
+│       decoder: null                                                           
+│       dropinp: 0.0                                                            
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/loss                                                     
+          mode: min                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/loss                                                    
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        early_stopping:                                                         
+          monitor: val/accuracy                                                 
+          mode: max                                                             
+          patience: 100                                                         
+          min_delta: 0                                                          
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 1111
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230713_114912-yjd3sq95
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run s4-wt103
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/yjd3sq95
+[2023-07-13 11:49:18,755][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-13 11:49:18,756][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-13 11:49:18,761][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-13 11:49:18,763][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-13 11:49:18,768][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>
+[2023-07-13 11:49:18,769][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-13 11:49:18,770][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+ddp automatically configured, more than 1 gpu used!
+Error executing job with overrides: ['experiment=lm/s4-wt103', 'wandb.name=s4-wt103']
+Traceback (most recent call last):
+  File "/home/qvk729/Master_thesis/train.py", line 712, in main
+    train(config)
+  File "/home/qvk729/Master_thesis/train.py", line 684, in train
+    trainer = create_trainer(config)
+  File "/home/qvk729/Master_thesis/train.py", line 671, in create_trainer
+    trainer = pl.Trainer(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/utilities/argparse.py", line 348, in insert_env_defaults
+    return fn(self, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 420, in __init__
+    self._accelerator_connector = AcceleratorConnector(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/connectors/accelerator_connector.py", line 204, in __init__
+    self._set_parallel_devices_and_init_accelerator()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/connectors/accelerator_connector.py", line 575, in _set_parallel_devices_and_init_accelerator
+    self._devices_flag = accelerator_cls.parse_devices(self._devices_flag)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/accelerators/cuda.py", line 82, in parse_devices
+    return _parse_gpu_ids(devices, include_cuda=True)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/lightning_fabric/utilities/device_parser.py", line 104, in _parse_gpu_ids
+    return _sanitize_gpu_ids(gpus, include_cuda=include_cuda, include_mps=include_mps)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/lightning_fabric/utilities/device_parser.py", line 136, in _sanitize_gpu_ids
+    raise MisconfigurationException(
+lightning_fabric.utilities.exceptions.MisconfigurationException: You requested gpu: [0, 1, 2, 3, 4, 5, 6, 7]
+ But your machine only has: [0]
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: - 0.006 MB of 0.006 MB uploaded (0.000 MB deduped)wandb: \ 0.006 MB of 0.016 MB uploaded (0.000 MB deduped)wandb: | 0.018 MB of 0.018 MB uploaded (0.000 MB deduped)wandb: 🚀 View run s4-wt103 at: https://wandb.ai/yuqinzhou/TNLM/runs/yjd3sq95
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230713_114912-yjd3sq95/logs

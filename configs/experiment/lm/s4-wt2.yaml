@@ -1,6 +1,6 @@
 # @package _global_
 defaults:
-  - /pipeline: wt103
+  - /pipeline: wt2
   - /model: s4
   - override /model/layer: s4s4ff
 
@@ -9,7 +9,7 @@ dataset:
   test_split: True
 loader:
   batch_size: 1
-  l_max: 8192
+  l_max: 512
   n_context: 1
   eval:
     batch_size: null

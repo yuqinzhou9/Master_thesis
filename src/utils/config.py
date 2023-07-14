@@ -92,8 +92,9 @@ def instantiate(registry, config, *args, partial=False, wrap=None, **kwargs):
     obj = functools.partial(fn, *args, **config, **kwargs)
 
     ## print out model architecture for debug
-    if _target_ == "src.models.sequence.rnns.rnn.RNN":
-        print(obj())
+    # if _target_ == "src.models.sequence.backbones.model.SequenceModel":
+    #     print(obj())
+    
     # Restore _name_
     if _name_ is not None:
         config["_name_"] = _name_

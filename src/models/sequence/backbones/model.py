@@ -121,10 +121,14 @@ class SequenceModel(SequenceModule):
         outputs = inputs
         prev_states = [None] * len(self.layers) if state is None else state
         next_states = []
+        
+        
         for layer, prev_state in zip(self.layers, prev_states):
             outputs, state = layer(outputs, *args, state=prev_state, **kwargs)
             next_states.append(state)
             if self.track_norms: output_norms.append(torch.mean(outputs.detach() ** 2))
+        
+        
         if self.norm is not None: outputs = self.norm(outputs)
 
         if self.transposed: outputs = rearrange(outputs, 'b d ... -> b ... d')
@@ -153,14 +157,14 @@ class SequenceModel(SequenceModule):
     def default_state(self, *batch_shape, device=None):
         return [layer.default_state(*batch_shape, device=device) for layer in self.layers]
 
-    def step(self, x, state, **kwargs):
-        # Apply layers
-        prev_states = [None] * len(self.layers) if state is None else state
-        next_states = []
-        for layer, prev_state in zip(self.layers, prev_states):
-            x, state = layer.step(x, state=prev_state, **kwargs)
-            next_states.append(state)
+    # def step(self, x, state, **kwargs):
+    #     # Apply layers
+    #     prev_states = [None] * len(self.layers) if state is None else state
+    #     next_states = []
+    #     for layer, prev_state in zip(self.layers, prev_states):
+    #         x, state = layer.step(x, state=prev_state, **kwargs)
+    #         next_states.append(state)
 
-        x = self.norm(x)
+    #     x = self.norm(x)
 
-        return x, next_states
+    #     return x, next_states

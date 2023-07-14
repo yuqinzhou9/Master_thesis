@@ -335,6 +335,7 @@ class AdaptiveEmbedding(nn.Module):
             for i in range(len(self.cutoffs)):
                 l_idx, r_idx = self.cutoff_ends[i], self.cutoff_ends[i + 1]
                 d_emb_i = d_embed // (div_val ** i)
+                print(r_idx, l_idx)
                 self.emb_layers.append(nn.Embedding(r_idx - l_idx, d_emb_i))
                 # torch.nn.init.normal_(self.emb_layers[-1].weight, mean=0, std=init_scale * d_emb_i ** -.5)
                 _init_embed(self.emb_layers[-1].weight, d_emb_i, init_scale)
