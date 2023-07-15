@@ -319,7 +319,9 @@ class WikiText2(SequenceDataset):
 
     @property
     def n_tokens(self):
+        print(f"vocabulary: {len(self.vocab)}")
         return len(self.vocab)
+        
 
     def prepare_data(self):
         # [21-09-23] probably broken

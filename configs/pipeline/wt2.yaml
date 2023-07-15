@@ -15,7 +15,7 @@ task:
   init_scale: 0.5 # null to get transformer-xl init
   bias_scale: 1.0
   div_val: 1 # Set to 4 for adaptive embeddings
-  cutoffs: [19997, 39997, 199997]
+  cutoffs: [9997, 19997, 29997]
   tie_weights: True
   tie_projs: [True, True, True]
   dropemb: 0.0 # Embedding dropout

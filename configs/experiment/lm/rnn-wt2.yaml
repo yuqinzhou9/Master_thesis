@@ -2,7 +2,8 @@
 defaults:
   - /pipeline: wt2
   - /model: s4
-  - override /model/layer: s4s4ff
+  - override /model/layer: rnn
+  - override /scheduler: cosine_warmup
 
 # Dataset
 dataset:
@@ -17,22 +18,29 @@ loader:
 
 task:
   div_val: 1
-  dropemb: 0.1
-  dropsoft: 0.1
+  dropemb: 0.0
+  dropsoft: 0.0
 
 # Model
 model:
-  dropinp: 0.0
   dropout: 0.1
-  prenorm: True
+  tie_dropout: true
   n_layers: 6
-  d_model: 512
-  transposed: false # Saves memory
-  tie_dropout: false # More standard
+  d_model: 384 
+  prenorm: False
+  transposed: False
+  norm: batch #defaul = layer
+  pool: null
+  layer:
+    cell:
+      d_input: 384
+      lr: 7.5e-5
+      # hidden_activation: identity
+  track_norms: false
 
 # Optimizer (adamw)
 optimizer:
-  lr: 5e-4
+  lr: 3e-4
   weight_decay: 0.1
 
 # Scheduler (cosine)

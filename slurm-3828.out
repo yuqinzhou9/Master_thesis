@@ -1,0 +1,1030 @@
+CONFIG
+├── train
+│   └── seed: 1111                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/loss                                                       
+│       mode: min                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: s4-wt2                                                            
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 1000                                                        
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       precision: 16                                                           
+│       enable_model_summary: false                                             
+│       track_grad_norm: -1                                                     
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       replace_sampler_ddp: false                                              
+│                                                                               
+├── loader
+│   └── batch_first: true                                                       
+│       batch_size: 1                                                           
+│       l_max: 512                                                              
+│       pad_last: false                                                         
+│       n_context: 1                                                            
+│       n_epoch_double: 0                                                       
+│       limit_tokens: 1.0                                                       
+│       eval:                                                                   
+│         l_max: null                                                           
+│         batch_size: null                                                      
+│                                                                               
+├── dataset
+│   └── _name_: wt2                                                             
+│       data_dir: null                                                          
+│       bpe: false                                                              
+│       roll_seed: 42                                                           
+│       test_split: true                                                        
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 0.0005                                                              
+│       weight_decay: 0.1                                                       
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 1000                                                  
+│       num_training_steps: 800000                                              
+│                                                                               
+├── task
+│   └── _name_: adaptivelm                                                      
+│       init_scale: 0.5                                                         
+│       bias_scale: 1.0                                                         
+│       div_val: 1                                                              
+│       cutoffs:                                                                
+│       - 9997                                                                  
+│       - 19997                                                                 
+│       - 29997                                                                 
+│       tie_weights: true                                                       
+│       tie_projs:                                                              
+│       - true                                                                  
+│       - true                                                                  
+│       - true                                                                  
+│       dropemb: 0.25                                                           
+│       dropsoft: 0.25                                                          
+│       loss: null                                                              
+│       metrics:                                                                
+│       - ppl                                                                   
+│                                                                               
+├── encoder
+│   └── None                                                                    
+├── decoder
+│   └── sequence                                                                
+├── model
+│   └── layer:                                                                  
+│       - _name_: s4                                                            
+│         l_max: 512                                                            
+│         final_act: glu                                                        
+│         dropout: 0.25                                                         
+│         lr: 0.0005                                                            
+│         n_ssm: 1                                                              
+│       - _name_: s4                                                            
+│         l_max: 512                                                            
+│         final_act: glu                                                        
+│         dropout: 0.25                                                         
+│         lr: 0.0005                                                            
+│         n_ssm: 1                                                              
+│       - _name_: ffn                                                           
+│         expand: 4                                                             
+│         activation: gelu                                                      
+│         dropout: 0.25                                                         
+│       _name_: model                                                           
+│       prenorm: true                                                           
+│       transposed: false                                                       
+│       n_layers: 6                                                             
+│       d_model: 128                                                            
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool:                                                                   
+│         _name_: pool                                                          
+│         stride: 1                                                             
+│         expand: null                                                          
+│       norm: layer                                                             
+│       dropout: 0.25                                                           
+│       tie_dropout: false                                                      
+│       track_norms: true                                                       
+│       encoder: null                                                           
+│       decoder: null                                                           
+│       dropinp: 0.0                                                            
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/loss                                                     
+          mode: min                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/loss                                                    
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 1111
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230715_190412-jiwi6fcs
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run s4-wt2
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/jiwi6fcs
+[2023-07-15 19:04:19,205][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-15 19:04:19,206][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-15 19:04:19,211][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-15 19:04:19,213][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-15 19:04:19,218][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-15 19:04:19,219][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+Using 16bit None Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2023-07-15 19:04:19,265][root][INFO] - Loading cached dataset...
+Vocab size: 33278
+[2023-07-15 19:04:19,502][src.models.sequence.kernels.ssm][WARNING] - CUDA extension for structured kernels (Cauchy and Vandermonde multiplication) not found. Install by going to extensions/kernels/ and running `python setup.py install`, for improved speed and memory efficiency. Note that the kernel changed for state-spaces 4.0 and must be recompiled.
+[2023-07-15 19:04:19,502][src.models.sequence.kernels.ssm][WARNING] - Falling back on slow Cauchy and Vandermonde kernel. Install at least one of pykeops or the CUDA extension for better speed and memory efficiency.
+[2023-07-15 19:04:19,563][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,572][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,584][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,590][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,599][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,605][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,614][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,621][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,634][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,641][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,651][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+[2023-07-15 19:04:19,656][src.models.sequence.kernels.ssm][INFO] - Constructing S4 (H, N, L) = (128, 32, 512)
+vocabulary: 33278
+SequenceLightningModule(
+  (model): SequenceModel(
+    (drop): Identity()
+    (layers): ModuleList(
+      (0): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (1): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (2): SequenceResidualBlock(
+        (layer): FFN(
+          (ff): Sequential(
+            (0): Sequential(
+              (0): Linear(in_features=128, out_features=512, bias=True)
+              (1): GELU(approximate=none)
+            )
+            (1): Dropout(p=0.25, inplace=False)
+            (2): Linear(in_features=512, out_features=128, bias=True)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (3): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (4): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (5): SequenceResidualBlock(
+        (layer): FFN(
+          (ff): Sequential(
+            (0): Sequential(
+              (0): Linear(in_features=128, out_features=512, bias=True)
+              (1): GELU(approximate=none)
+            )
+            (1): Dropout(p=0.25, inplace=False)
+            (2): Linear(in_features=512, out_features=128, bias=True)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (6): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (7): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (8): SequenceResidualBlock(
+        (layer): FFN(
+          (ff): Sequential(
+            (0): Sequential(
+              (0): Linear(in_features=128, out_features=512, bias=True)
+              (1): GELU(approximate=none)
+            )
+            (1): Dropout(p=0.25, inplace=False)
+            (2): Linear(in_features=512, out_features=128, bias=True)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (9): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (10): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (11): SequenceResidualBlock(
+        (layer): FFN(
+          (ff): Sequential(
+            (0): Sequential(
+              (0): Linear(in_features=128, out_features=512, bias=True)
+              (1): GELU(approximate=none)
+            )
+            (1): Dropout(p=0.25, inplace=False)
+            (2): Linear(in_features=512, out_features=128, bias=True)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (12): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (13): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (14): SequenceResidualBlock(
+        (layer): FFN(
+          (ff): Sequential(
+            (0): Sequential(
+              (0): Linear(in_features=128, out_features=512, bias=True)
+              (1): GELU(approximate=none)
+            )
+            (1): Dropout(p=0.25, inplace=False)
+            (2): Linear(in_features=512, out_features=128, bias=True)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (15): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (16): SequenceResidualBlock(
+        (layer): S4Block(
+          (layer): FFTConv(
+            (activation): GELU(approximate=none)
+            (kernel): SSMKernelDPLR()
+            (drop): Dropout(p=0.25, inplace=False)
+            (drop_kernel): Identity()
+          )
+          (mult_activation): Identity()
+          (drop): Dropout(p=0.25, inplace=False)
+          (output_linear): Sequential(
+            (0): Linear(in_features=128, out_features=256, bias=True)
+            (1): GLU(dim=-1)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+      (17): SequenceResidualBlock(
+        (layer): FFN(
+          (ff): Sequential(
+            (0): Sequential(
+              (0): Linear(in_features=128, out_features=512, bias=True)
+              (1): GELU(approximate=none)
+            )
+            (1): Dropout(p=0.25, inplace=False)
+            (2): Linear(in_features=512, out_features=128, bias=True)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        )
+        (pool): DownAvgPool()
+        (drop): Dropout1d(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+    )
+    (norm): Normalization(
+      (norm): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+    )
+  )
+  (encoder): AdaptiveEmbedding(
+    (0): AdaptiveEmbedding(
+      (drop): Dropout(p=0.25, inplace=False)
+      (emb_layers): ModuleList(
+        (0): Embedding(33278, 128)
+      )
+      (emb_projs): ParameterList()
+    )
+  )
+  (decoder): SequenceDecoder(
+    (0): SequenceDecoder(
+      (output_transform): Identity()
+    )
+  )
+  (loss): ProjectedAdaptiveLogSoftmax(
+    (out_layers_biases): ParameterList(  (0): Parameter containing: [torch.FloatTensor of size 33278])
+    (shared_out_projs): ParameterList()
+    (out_projs): OptionalParameterList()
+    (drop): Dropout(p=0.25, inplace=False)
+  )
+  (loss_val): ProjectedAdaptiveLogSoftmax(
+    (out_layers_biases): ParameterList(  (0): Parameter containing: [torch.FloatTensor of size 33278])
+    (shared_out_projs): ParameterList()
+    (out_projs): OptionalParameterList()
+    (drop): Dropout(p=0.25, inplace=False)
+  )
+)
+[2023-07-15 19:04:19,821][root][INFO] - Loading cached dataset...
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Vocab size: 33278
+Hyperparameter groups [{'lr': 0.0005, 'weight_decay': 0.0}]
+[2023-07-15 19:04:22,291][__main__][INFO] - Optimizer group 0 | 150 tensors | lr 0.0005 | weight_decay 0.1
+[2023-07-15 19:04:22,291][__main__][INFO] - Optimizer group 1 | 60 tensors | lr 0.0005 | weight_decay 0.0
+┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃   ┃ Name    ┃ Type                        ┃ Params ┃
+┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0 │ model   │ SequenceModel               │  1.9 M │
+│ 1 │ encoder │ AdaptiveEmbedding           │  4.3 M │
+│ 2 │ decoder │ SequenceDecoder             │      0 │
+│ 3 │ loss    │ ProjectedAdaptiveLogSoftmax │ 33.7 K │
+└───┴─────────┴─────────────────────────────┴────────┘
+Trainable params: 6.2 M                                                         
+Non-trainable params: 0                                                         
+Total params: 6.2 M                                                             
+Total estimated model params size (MB): 12                                      
+SLURM auto-requeueing enabled. Setting signal handlers.
+eval loader: {'l_max': 512, 'batch_size': 1, 'batch_first': True, 'pad_last': False, 'n_context': 1, 'n_epoch_double': 0, 'limit_tokens': 1.0}
+eval loader: {'l_max': 512, 'batch_size': 1, 'batch_first': True, 'pad_last': False, 'n_context': 1, 'n_epoch_double': 0, 'limit_tokens': 1.0}
+[2023-07-15 19:04:22,337][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,935][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,941][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,945][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,950][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,954][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,959][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,963][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,968][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,972][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,976][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+[2023-07-15 19:04:24,980][src.models.sequence.kernels.ssm][INFO] - S4: Initializing kernel to length 512
+Epoch 0, global step 4080: 'val/loss' reached 5.69762 (best 5.69762), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 0/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:50 •       32.65it/s loss: 6.01      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 309.89 
+                                                                val/loss: 5.698 
+                                                                test/ppl:       
+                                                                291.946         
+                                                                test/loss: 5.633
+                                                                train/ppl:      
+                                                                1413.344        
+                                                                train/loss:     
+                                                                6.639           
+Epoch 1, global step 8160: 'val/loss' reached 5.41432 (best 5.41432), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 1/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:40 •       32.52it/s loss: 5.75      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 233.864
+                                                                val/loss: 5.414 
+                                                                test/ppl:       
+                                                                217.835         
+                                                                test/loss: 5.331
+                                                                train/ppl:      
+                                                                326.783         
+                                                                train/loss:     
+                                                                5.751           
+Epoch 2, global step 12240: 'val/loss' reached 5.25743 (best 5.25743), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 2/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:33 •       32.64it/s loss: 5.41      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 200.955
+                                                                val/loss: 5.257 
+                                                                test/ppl:       
+                                                                187.569         
+                                                                test/loss: 5.173
+                                                                train/ppl:      
+                                                                242.019         
+                                                                train/loss:     
+                                                                5.446           
+Epoch 3, global step 16320: 'val/loss' reached 5.18175 (best 5.18175), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 3/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:33 •       32.64it/s loss: 5.26      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 187.04 
+                                                                val/loss: 5.182 
+                                                                test/ppl:       
+                                                                174.652         
+                                                                test/loss: 5.103
+                                                                train/ppl:      
+                                                                202.975         
+                                                                train/loss:     
+                                                                5.266           
+Epoch 4, global step 20400: 'val/loss' reached 5.11202 (best 5.11202), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 4/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.91it/s loss: 5.22      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 174.434
+                                                                val/loss: 5.112 
+                                                                test/ppl:       
+                                                                166.238         
+                                                                test/loss: 5.052
+                                                                train/ppl:      
+                                                                180.152         
+                                                                train/loss: 5.15
+Epoch 5, global step 24480: 'val/loss' reached 5.10670 (best 5.10670), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 5/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:35 •       32.67it/s loss: 5.15      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 173.179
+                                                                val/loss: 5.107 
+                                                                test/ppl:       
+                                                                164.911         
+                                                                test/loss: 5.045
+                                                                train/ppl:      
+                                                                166.583         
+                                                                train/loss:     
+                                                                5.069           
+Epoch 6, global step 28560: 'val/loss' reached 5.05593 (best 5.05593), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 6/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:35 •       32.69it/s loss: 5.13      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 165.087
+                                                                val/loss: 5.056 
+                                                                test/ppl:       
+                                                                157.084         
+                                                                test/loss: 4.99 
+                                                                train/ppl:      
+                                                                156.497         
+                                                                train/loss:     
+                                                                5.006           
+Epoch 7, global step 32640: 'val/loss' reached 5.03550 (best 5.03550), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 7/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.73it/s loss: 5.02      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 162.217
+                                                                val/loss: 5.035 
+                                                                test/ppl:       
+                                                                155.696         
+                                                                test/loss: 4.981
+                                                                train/ppl:      
+                                                                148.945         
+                                                                train/loss:     
+                                                                4.954           
+Epoch 8, global step 36720: 'val/loss' reached 4.99214 (best 4.99214), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 8/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:35 •       32.70it/s loss: 5.02      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 155.34 
+                                                                val/loss: 4.992 
+                                                                test/ppl:       
+                                                                148.024         
+                                                                test/loss: 4.929
+                                                                train/ppl:      
+                                                                143.383         
+                                                                train/loss: 4.92
+Epoch 9, global step 40800: 'val/loss' reached 4.98281 (best 4.98281), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 9/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:36 •       32.32it/s loss: 5.07      
+                                      0:00:00                   v_num: 6fcs     
+                                                                val/ppl: 153.57 
+                                                                val/loss: 4.983 
+                                                                test/ppl:       
+                                                                147.181         
+                                                                test/loss: 4.925
+                                                                train/ppl:      
+                                                                138.894         
+                                                                train/loss:     
+                                                                4.882           
+Epoch 10, global step 44880: 'val/loss' was not in top 1
+Epoch 10/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:36 •       32.65it/s loss: 4.9      
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 154.507        
+                                                                 val/loss: 4.984
+                                                                 test/ppl:      
+                                                                 148.271        
+                                                                 test/loss:     
+                                                                 4.925          
+                                                                 train/ppl:     
+                                                                 135.569        
+                                                                 train/loss:    
+                                                                 4.859          
+Epoch 11, global step 48960: 'val/loss' was not in top 1
+Epoch 11/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.79it/s loss: 4.93     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 156.508        
+                                                                 val/loss: 5.002
+                                                                 test/ppl:      
+                                                                 151.515        
+                                                                 test/loss: 4.95
+                                                                 train/ppl:     
+                                                                 132.541        
+                                                                 train/loss:    
+                                                                 4.842          
+Epoch 12, global step 53040: 'val/loss' was not in top 1
+Epoch 12/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.96it/s loss: 5.19     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 153.326        
+                                                                 val/loss: 4.983
+                                                                 test/ppl:      
+                                                                 145.368        
+                                                                 test/loss:     
+                                                                 4.912          
+                                                                 train/ppl:     
+                                                                 130.178        
+                                                                 train/loss:    
+                                                                 4.823          
+Epoch 13, global step 57120: 'val/loss' reached 4.94330 (best 4.94330), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 13/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:35 •       32.24it/s loss: 5.11     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 148.255        
+                                                                 val/loss: 4.943
+                                                                 test/ppl:      
+                                                                 144.134        
+                                                                 test/loss:     
+                                                                 4.901          
+                                                                 train/ppl:     
+                                                                 128.446        
+                                                                 train/loss: 4.8
+Epoch 14, global step 61200: 'val/loss' was not in top 1
+Epoch 14/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:36 •       32.61it/s loss: 5.07     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 150.958        
+                                                                 val/loss: 4.963
+                                                                 test/ppl:      
+                                                                 145.083        
+                                                                 test/loss:     
+                                                                 4.909          
+                                                                 train/ppl:     
+                                                                 126.238        
+                                                                 train/loss:    
+                                                                 4.787          
+Epoch 15, global step 65280: 'val/loss' was not in top 1
+Epoch 15/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.73it/s loss: 4.82     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 151.357        
+                                                                 val/loss: 4.964
+                                                                 test/ppl:      
+                                                                 146.857        
+                                                                 test/loss:     
+                                                                 4.916          
+                                                                 train/ppl:     
+                                                                 124.503        
+                                                                 train/loss:    
+                                                                 4.773          
+Epoch 16, global step 69360: 'val/loss' was not in top 1
+Epoch 16/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.94it/s loss: 5.01     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 149.758        
+                                                                 val/loss: 4.952
+                                                                 test/ppl:      
+                                                                 145.289        
+                                                                 test/loss:     
+                                                                 4.906          
+                                                                 train/ppl:     
+                                                                 123.759        
+                                                                 train/loss:    
+                                                                 4.763          
+Epoch 17, global step 73440: 'val/loss' was not in top 1
+Epoch 17/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:35 •       32.54it/s loss: 4.95     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 150.636        
+                                                                 val/loss: 4.958
+                                                                 test/ppl:      
+                                                                 143.999        
+                                                                 test/loss:     
+                                                                 4.896          
+                                                                 train/ppl:     
+                                                                 122.25         
+                                                                 train/loss:    
+                                                                 4.759          
+Epoch 18, global step 77520: 'val/loss' reached 4.93849 (best 4.93849), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 18/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.69it/s loss: 4.7      
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 147.661        
+                                                                 val/loss: 4.938
+                                                                 test/ppl:      
+                                                                 141.635        
+                                                                 test/loss:     
+                                                                 4.886          
+                                                                 train/ppl:     
+                                                                 121.656        
+                                                                 train/loss:    
+                                                                 4.744          
+Epoch 19, global step 81600: 'val/loss' reached 4.92810 (best 4.92810), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-15/19-04-11-402561/checkpoints/val/loss.ckpt' as top 1
+Epoch 19/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:33 •       32.90it/s loss: 4.79     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 145.428        
+                                                                 val/loss: 4.928
+                                                                 test/ppl:      
+                                                                 143.052        
+                                                                 test/loss:     
+                                                                 4.889          
+                                                                 train/ppl:     
+                                                                 119.873        
+                                                                 train/loss:    
+                                                                 4.738          
+Epoch 20, global step 85680: 'val/loss' was not in top 1
+Epoch 20/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:34 •       32.65it/s loss: 4.78     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 147.555        
+                                                                 val/loss: 4.939
+                                                                 test/ppl:      
+                                                                 142.231        
+                                                                 test/loss:     
+                                                                 4.887          
+                                                                 train/ppl:     
+                                                                 119.818        
+                                                                 train/loss:    
+                                                                 4.731          
+Epoch 21, global step 89760: 'val/loss' was not in top 1
+Epoch 21/999 ━━━━━━━━━━━━━━━ 4986/4986 0:06:37 •       32.55it/s loss: 5.25     
+                                       0:00:00                   v_num: 6fcs    
+                                                                 val/ppl:       
+                                                                 148.133        
+                                                                 val/loss: 4.944
+                                                                 test/ppl:      
+                                                                 143.912        
+                                                                 test/loss:     
+                                                                 4.901          
+                                                                 train/ppl:     
+                                                                 118.564        
+                                                                 train/loss:    
+                                                                 4.727          
