@@ -199,6 +199,7 @@ class OpenAIVocab(Vocab):
 
         pad = 8
         vocab_size = len(self.tokenizer)
+        print(f"vocab_size: {vocab_size}")
         padded_vocab_size = (vocab_size + pad - 1) // pad * pad
         for i in range(0, padded_vocab_size - vocab_size):
             token = f'madeupword{i:09d}'

@@ -319,7 +319,6 @@ class WikiText2(SequenceDataset):
 
     @property
     def n_tokens(self):
-        print(f"vocabulary: {len(self.vocab)}")
         return len(self.vocab)
         
 
@@ -338,8 +337,10 @@ class WikiText2(SequenceDataset):
     def setup(self, stage=None): # [21-09-10 AG]: TODO shouldn't this tokenization happen in the prepare_data? since we're caching it it doesn't really matter, but still
         if self.data_dir is None: self.data_dir = default_data_path / self._name_
         if self.bpe:
+            print(f'vocab = OpenAIVocab()')
             self.vocab = OpenAIVocab()
         else:
+            print("situation 2")
             self.vocab = Vocab(**self.vocab_kwargs)
 
         # Loader arguments
@@ -364,6 +365,7 @@ class WikiText2(SequenceDataset):
 
         # Define task
         print("Vocab size:", len(self.vocab))
+        print(f'BPE: {self.bpe}')
 
     def _vocab_count(self):
         self.vocab.count_file(self.data_dir / "train.txt")

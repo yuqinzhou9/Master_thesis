@@ -1,6 +1,6 @@
 # @package _global_
 defaults:
-  - /pipeline: wt103
+  - /pipeline: wt2
   - /model: s4
   - override /model/layer: s4s4ff
 
@@ -8,15 +8,15 @@ defaults:
 dataset:
   test_split: True
 loader:
-  batch_size: 16
-  l_max: 8192
+  batch_size: 32
+  l_max: 2048
   n_context: 1
   eval:
     batch_size: null
     l_max: null
 
 task:
-  div_val: 4
+  div_val: 1
   dropemb: 0.25
   dropsoft: 0.25
 
@@ -25,8 +25,8 @@ model:
   dropinp: 0.0
   dropout: 0.25
   prenorm: True
-  n_layers: 1
-  d_model: 1024
+  n_layers: 6
+  d_model: 512
   transposed: false # Saves memory
   tie_dropout: false # More standard
 
@@ -38,9 +38,10 @@ optimizer:
 # Scheduler (cosine)
 trainer:
   max_epochs: 1000
+  devices: 1
 
 scheduler:
-  num_warmup_steps: 1000
+  num_warmup_steps: 10000
   num_training_steps: 800000
 
 train:

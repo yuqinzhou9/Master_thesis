@@ -9,8 +9,8 @@ defaults:
 dataset:
   test_split: True
 loader:
-  batch_size: 32
-  l_max: 2048
+  batch_size: 100
+  l_max: 128
   n_context: 1
   eval:
     batch_size: null
@@ -25,7 +25,7 @@ task:
 model:
   dropout: 0.25
   tie_dropout: true
-  n_layers: 6
+  n_layers: 12
   d_model: 384 
   prenorm: False
   transposed: False
@@ -35,8 +35,8 @@ model:
     cell:
       d_input: 384
       lr: 7.5e-5
-      # hidden_activation: identity
-  track_norms: false
+      hidden_activation: identity
+  track_norms: true
 
 # Optimizer (adamw)
 optimizer:
@@ -46,6 +46,8 @@ optimizer:
 # Scheduler (cosine)
 trainer:
   max_epochs: 1000
+  track_grad_norm: 2
+  # gradient_clip_val: 0.25
 
 scheduler:
   num_warmup_steps: 10000

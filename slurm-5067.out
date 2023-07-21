@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qvk729/Master_thesis/train.py", line 22, in <module>
+    import src.models.nn.utils as U
+  File "/home/qvk729/Master_thesis/src/models/nn/__init__.py", line 4, in <module>
+    from .dropout import DropoutNd, StochasticDepth
+  File "/home/qvk729/Master_thesis/src/models/nn/dropout.py", line 85
+    break
+    ^^^^^
+SyntaxError: 'break' outside loop

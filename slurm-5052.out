@@ -1,0 +1,508 @@
+CONFIG
+├── train
+│   └── seed: 2222                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/accuracy                                                   
+│       mode: max                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: rnn-lin-mnist1                                                    
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       strategy: null                                                          
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 100                                                         
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       enable_model_summary: false                                             
+│       track_grad_norm: 2                                                      
+│                                                                               
+├── loader
+│   └── batch_size: 50                                                          
+│       num_workers: 4                                                          
+│       pin_memory: true                                                        
+│       drop_last: true                                                         
+│                                                                               
+├── dataset
+│   └── _name_: mnist                                                           
+│       permute: true                                                           
+│       val_split: 0.1                                                          
+│       seed: 42                                                                
+│                                                                               
+├── task
+│   └── _name_: base                                                            
+│       loss: cross_entropy                                                     
+│       metrics:                                                                
+│       - accuracy                                                              
+│       torchmetrics: null                                                      
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 0.0003                                                              
+│       weight_decay: 0.05                                                      
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 10800                                                 
+│       num_training_steps: 108000                                              
+│                                                                               
+├── encoder
+│   └── linear                                                                  
+├── decoder
+│   └── _name_: sequence                                                        
+│       mode: pool                                                              
+│                                                                               
+├── model
+│   └── layer:                                                                  
+│         cell:                                                                 
+│           _name_: rnn                                                         
+│           hidden_activation: identity                                         
+│           orthogonal: false                                                   
+│           d_input: 384                                                        
+│           lr: 7.5e-05                                                         
+│         _name_: rnn                                                           
+│         return_output: true                                                   
+│       _name_: model                                                           
+│       prenorm: false                                                          
+│       transposed: false                                                       
+│       n_layers: 1                                                             
+│       d_model: 384                                                            
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool: null                                                              
+│       norm: batch                                                             
+│       dropout: 0.2                                                            
+│       tie_dropout: false                                                      
+│       track_norms: false                                                      
+│       encoder: null                                                           
+│       decoder: null                                                           
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/accuracy                                                 
+          mode: max                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/accuracy                                                
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 2222
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230721_131219-mnay7nu3
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run rnn-lin-mnist1
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/mnay7nu3
+[2023-07-21 13:12:25,926][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-21 13:12:25,928][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-21 13:12:25,934][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-21 13:12:25,936][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-21 13:12:25,942][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-21 13:12:25,943][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+NOTE: no dropout inside recurrent cell
+Dropout(p=0.2, inplace=False)
+SequenceLightningModule(
+  (model): SequenceModel(
+    (drop): Identity()
+    (layers): ModuleList(
+      (0): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.2, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+    )
+    (norm): Identity()
+  )
+  (encoder): Linear(
+    (0): Linear(in_features=1, out_features=384, bias=True)
+  )
+  (decoder): SequenceDecoder(
+    (0): SequenceDecoder(
+      (output_transform): Linear(in_features=384, out_features=10, bias=True)
+    )
+  )
+)
+Hyperparameter groups [{'weight_decay': 0.0, 'lr': 7.5e-05}]
+[2023-07-21 13:12:28,785][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 0.0003 | weight_decay 0.05
+[2023-07-21 13:12:28,785][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 7.5e-05 | weight_decay 0.0
+┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃   ┃ Name    ┃ Type            ┃ Params ┃
+┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0 │ model   │ SequenceModel   │  591 K │
+│ 1 │ encoder │ Linear          │    768 │
+│ 2 │ decoder │ SequenceDecoder │  3.9 K │
+└───┴─────────┴─────────────────┴────────┘
+Trainable params: 595 K                                                         
+Non-trainable params: 0                                                         
+Total params: 595 K                                                             
+Total estimated model params size (MB): 2                                       
+SLURM auto-requeueing enabled. Setting signal handlers.
+[2023-07-21 13:12:28,808][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
+[2023-07-21 13:12:28,808][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
+[2023-07-21 13:12:32,877][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
+Epoch 0, global step 1080: 'val/accuracy' reached 0.26617 (best 0.26617), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 0/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:39 •       13.43it/s loss: 1.91 v_num:
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.266 val/loss:  
+                                                               1.972            
+                                                               test/accuracy:   
+                                                               0.268 test/loss: 
+                                                               1.953            
+                                                               train/accuracy:  
+                                                               0.21 train/loss: 
+                                                               2.124            
+Epoch 1, global step 2160: 'val/accuracy' reached 0.28417 (best 0.28417), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 1/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:38 •       12.47it/s loss: 1.79 v_num:
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.284 val/loss:  
+                                                               1.855            
+                                                               test/accuracy:   
+                                                               0.289 test/loss: 
+                                                               1.842            
+                                                               train/accuracy:  
+                                                               0.324 train/loss:
+                                                               1.811            
+Epoch 2, global step 3240: 'val/accuracy' reached 0.36200 (best 0.36200), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 2/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:21 •       14.00it/s loss: 1.8 v_num: 
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.362 val/loss:  
+                                                               1.771            
+                                                               test/accuracy:   
+                                                               0.366 test/loss: 
+                                                               1.742            
+                                                               train/accuracy:  
+                                                               0.342 train/loss:
+                                                               1.761            
+Epoch 3, global step 4320: 'val/accuracy' reached 0.38967 (best 0.38967), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 3/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:05 •       14.00it/s loss: 1.72 v_num:
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.39 val/loss:   
+                                                               1.71             
+                                                               test/accuracy:   
+                                                               0.392 test/loss: 
+                                                               1.687            
+                                                               train/accuracy:  
+                                                               0.356 train/loss:
+                                                               1.738            
+Epoch 4, global step 5400: 'val/accuracy' reached 0.40500 (best 0.40500), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 4/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:47 •       13.69it/s loss: 1.48 v_num:
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.405 val/loss:  
+                                                               1.624            
+                                                               test/accuracy:   
+                                                               0.398 test/loss: 
+                                                               1.622            
+                                                               train/accuracy:  
+                                                               0.418 train/loss:
+                                                               1.624            
+Epoch 5, global step 6480: 'val/accuracy' reached 0.49817 (best 0.49817), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 5/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:54 •       13.86it/s loss: 1.36 v_num:
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.498 val/loss:  
+                                                               1.479            
+                                                               test/accuracy:   
+                                                               0.5 test/loss:   
+                                                               1.438            
+                                                               train/accuracy:  
+                                                               0.527 train/loss:
+                                                               1.4              
+Epoch 6, global step 7560: 'val/accuracy' reached 0.56067 (best 0.56067), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 6/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:51 •       13.57it/s loss: 1.2 v_num: 
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.561 val/loss:  
+                                                               1.324            
+                                                               test/accuracy:   
+                                                               0.564 test/loss: 
+                                                               1.308            
+                                                               train/accuracy:  
+                                                               0.583 train/loss:
+                                                               1.257            
+Epoch 7, global step 8640: 'val/accuracy' reached 0.62917 (best 0.62917), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 7/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:47 •       14.42it/s loss: 1.2 v_num: 
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.629 val/loss:  
+                                                               1.134            
+                                                               test/accuracy:   
+                                                               0.636 test/loss: 
+                                                               1.098            
+                                                               train/accuracy:  
+                                                               0.624 train/loss:
+                                                               1.147            
+Epoch 8, global step 9720: 'val/accuracy' was not in top 1
+Epoch 8/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:47 •       13.84it/s loss: 1.03 v_num:
+                                     0:00:00                   7nu3             
+                                                               val/accuracy:    
+                                                               0.588 val/loss:  
+                                                               1.222            
+                                                               test/accuracy:   
+                                                               0.595 test/loss: 
+                                                               1.197            
+                                                               train/accuracy:  
+                                                               0.649 train/loss:
+                                                               1.08             
+Epoch 9, global step 10800: 'val/accuracy' reached 0.65033 (best 0.65033), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 9/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:51 •       13.81it/s loss: 0.931      
+                                     0:00:00                   v_num: 7nu3      
+                                                               val/accuracy:    
+                                                               0.65 val/loss:   
+                                                               1.056            
+                                                               test/accuracy:   
+                                                               0.665 test/loss: 
+                                                               1.019            
+                                                               train/accuracy:  
+                                                               0.675 train/loss:
+                                                               1.004            
+Epoch 10, global step 11880: 'val/accuracy' reached 0.66683 (best 0.66683), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/13-12-17-602606/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 10/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:47 •       14.18it/s loss: 0.873     
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.667 val/loss: 
+                                                                1.054           
+                                                                test/accuracy:  
+                                                                0.675 test/loss:
+                                                                1.008           
+                                                                train/accuracy: 
+                                                                0.699           
+                                                                train/loss:     
+                                                                0.939           
+Epoch 11, global step 12960: 'val/accuracy' was not in top 1
+Epoch 11/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:50 •       13.57it/s loss: 0.894     
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.657 val/loss: 
+                                                                0.976           
+                                                                test/accuracy:  
+                                                                0.677 test/loss:
+                                                                0.917           
+                                                                train/accuracy: 
+                                                                0.736           
+                                                                train/loss:     
+                                                                0.837           
+Epoch 12, global step 14040: 'val/accuracy' was not in top 1
+Epoch 12/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:54 •       13.45it/s loss: 2.27      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.211 val/loss: 
+                                                                2.253           
+                                                                test/accuracy:  
+                                                                0.202 test/loss:
+                                                                2.252           
+                                                                train/accuracy: 
+                                                                0.712           
+                                                                train/loss: 0.96
+Epoch 13, global step 15120: 'val/accuracy' was not in top 1
+Epoch 13/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:55 •       14.25it/s loss: 2.17      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.212 val/loss: 
+                                                                2.173           
+                                                                test/accuracy:  
+                                                                0.205 test/loss:
+                                                                2.173           
+                                                                train/accuracy: 
+                                                                0.198           
+                                                                train/loss: 2.21
+Epoch 14, global step 16200: 'val/accuracy' was not in top 1
+Epoch 14/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:43 •       15.00it/s loss: 2.12      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.218 val/loss: 
+                                                                2.122           
+                                                                test/accuracy:  
+                                                                0.22 test/loss: 
+                                                                2.12            
+                                                                train/accuracy: 
+                                                                0.213           
+                                                                train/loss:     
+                                                                2.148           
+Epoch 15, global step 17280: 'val/accuracy' was not in top 1
+Epoch 15/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:00 •       13.94it/s loss: 2.07      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.22 val/loss:  
+                                                                2.093           
+                                                                test/accuracy:  
+                                                                0.214 test/loss:
+                                                                2.093           
+                                                                train/accuracy: 
+                                                                0.22 train/loss:
+                                                                2.108           
+Epoch 16, global step 18360: 'val/accuracy' was not in top 1
+Epoch 16/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:50 •       13.85it/s loss: 2.11      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.228 val/loss: 
+                                                                2.077           
+                                                                test/accuracy:  
+                                                                0.226 test/loss:
+                                                                2.08            
+                                                                train/accuracy: 
+                                                                0.222           
+                                                                train/loss:     
+                                                                2.087           
+Epoch 17, global step 19440: 'val/accuracy' was not in top 1
+Epoch 17/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:59 •       13.77it/s loss: 2.07      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.228 val/loss: 
+                                                                2.071           
+                                                                test/accuracy:  
+                                                                0.223 test/loss:
+                                                                2.073           
+                                                                train/accuracy: 
+                                                                0.224           
+                                                                train/loss:     
+                                                                2.077           
+Epoch 18, global step 20520: 'val/accuracy' was not in top 1
+Epoch 18/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:00 •       14.30it/s loss: 2.11      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.223 val/loss: 
+                                                                2.071           
+                                                                test/accuracy:  
+                                                                0.217 test/loss:
+                                                                2.073           
+                                                                train/accuracy: 
+                                                                0.225           
+                                                                train/loss:     
+                                                                2.072           
+Epoch 19, global step 21600: 'val/accuracy' was not in top 1
+Epoch 19/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:39 •       14.13it/s loss: 2.07      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.225 val/loss: 
+                                                                2.066           
+                                                                test/accuracy:  
+                                                                0.221 test/loss:
+                                                                2.071           
+                                                                train/accuracy: 
+                                                                0.224           
+                                                                train/loss: 2.07
+Epoch 20, global step 22680: 'val/accuracy' was not in top 1
+Epoch 20/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:56 •       14.64it/s loss: 2.07      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.225 val/loss: 
+                                                                2.067           
+                                                                test/accuracy:  
+                                                                0.223 test/loss:
+                                                                2.069           
+                                                                train/accuracy: 
+                                                                0.226           
+                                                                train/loss:     
+                                                                2.069           
+Epoch 21, global step 23760: 'val/accuracy' was not in top 1
+Epoch 21/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:53 •       13.75it/s loss: 2.06      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.235 val/loss: 
+                                                                2.063           
+                                                                test/accuracy:  
+                                                                0.224 test/loss:
+                                                                2.066           
+                                                                train/accuracy: 
+                                                                0.226           
+                                                                train/loss:     
+                                                                2.068           
+Epoch 22, global step 24840: 'val/accuracy' was not in top 1
+Epoch 22/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:51 •       13.85it/s loss: 2.06      
+                                      0:00:00                   v_num: 7nu3     
+                                                                val/accuracy:   
+                                                                0.227 val/loss: 
+                                                                2.063           
+                                                                test/accuracy:  
+                                                                0.222 test/loss:
+                                                                2.066           
+                                                                train/accuracy: 
+                                                                0.227           
+                                                                train/loss:     
+                                                                2.068           
+slurmstepd: error: *** JOB 5052 ON hendrixgpu10fl CANCELLED AT 2023-07-21T14:22:34 ***

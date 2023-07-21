@@ -9,9 +9,9 @@ defaults:
 
 
 model:
-  dropout: 0.1
-  tie_dropout: true
-  n_layers: 6
+  dropout: 0.2
+  tie_dropout: false
+  n_layers: 1
   d_model: 384 
   prenorm: False
   transposed: False
@@ -22,7 +22,7 @@ model:
       d_input: 384
       lr: 7.5e-5
       hidden_activation: identity
-  track_norms: false 
+  track_norms: true 
   
 
 loader:
@@ -30,12 +30,12 @@ loader:
 
 optimizer:
   lr: 3e-4
-  weight_decay: 0.05
+  # weight_decay: 0.05
 
 trainer:
   max_epochs: 100
-  # track_grad_norm: 2
-  # gradient_clip_val: 1
+  track_grad_norm: 2
+  # gradient_clip_val: 0.25
   # gradient_clip_algorithm: norm
 
 scheduler:

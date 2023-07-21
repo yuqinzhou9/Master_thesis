@@ -80,6 +80,8 @@ class DropoutNd(nn.Module):
         """X: (batch, dim, lengths...)."""
         if self.training:
             if not self.transposed: X = rearrange(X, 'b ... d -> b d ...')
+            
+
             # binomial = torch.distributions.binomial.Binomial(probs=1-self.p) # This is incredibly slow because of CPU -> GPU copying
             mask_shape = X.shape[:2] + (1,)*(X.ndim-2) if self.tie else X.shape
             # mask = self.binomial.sample(mask_shape)

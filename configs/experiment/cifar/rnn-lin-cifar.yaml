@@ -9,18 +9,18 @@ defaults:
 
 
 model:
-  dropout: 0.1
-  tie_dropout: true
-  n_layers: 6
+  dropout: 0.2
+  tie_dropout: false
+  n_layers: 1
   d_model: 384 
   prenorm: False
   transposed: False
-  norm: batch #defaul = layer
+  norm: batch
   pool: null
   layer:
     cell:
       d_input: 384
-      lr: 7.5e-9
+      lr: 7.5e-5
       hidden_activation: identity
   track_norms: true 
   
@@ -29,14 +29,14 @@ loader:
   batch_size: 50
 
 optimizer:
-  lr: 3e-8
+  lr: 3e-4
   weight_decay: 0.05
 
 trainer:
   max_epochs: 200
   track_grad_norm: 2
-  gradient_clip_val: 1
-  gradient_clip_algorithm: norm
+  # gradient_clip_val: 1
+  # gradient_clip_algorithm: norm
 
 scheduler:
   num_warmup_steps: 18000  # 20 epoch (20 * 900)

@@ -8,8 +8,8 @@ defaults:
 dataset:
   test_split: True
 loader:
-  batch_size: 1
-  l_max: 512
+  batch_size: 32
+  l_max: 1024
   n_context: 1
   eval:
     batch_size: null
@@ -17,13 +17,13 @@ loader:
 
 task:
   div_val: 1
-  dropemb: 0.1
-  dropsoft: 0.1
+  dropemb: 0.4
+  dropsoft: 0.4
 
 # Model
 model:
   dropinp: 0.0
-  dropout: 0.1
+  dropout: 0.4
   prenorm: True
   n_layers: 6
   d_model: 512
@@ -40,7 +40,7 @@ trainer:
   max_epochs: 1000
 
 scheduler:
-  num_warmup_steps: 1000
+  num_warmup_steps: 10000
   num_training_steps: 800000
 
 train:

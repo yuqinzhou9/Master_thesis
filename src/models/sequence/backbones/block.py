@@ -74,8 +74,8 @@ class SequenceResidualBlock(SequenceModule):
 
         # Dropout
         dropout_cls = partial(DropoutNd, transposed=self.transposed) if tie_dropout else nn.Dropout
-        # self.drop = dropout_cls(dropout) if dropout > 0.0 else nn.Identity()
-        self.drop = nn.Dropout1d(dropout) if dropout > 0.0 else nn.Identity()
+        self.drop = dropout_cls(dropout) if dropout > 0.0 else nn.Identity()
+        # self.drop = nn.Dropout1d(dropout) if dropout > 0.0 else nn.Identity()
 
         # position-wise output transform to mix features
         self.output_linear = nn.Sequential(
@@ -104,13 +104,14 @@ class SequenceResidualBlock(SequenceModule):
         return self.layer.default_state(*args, **kwargs)
 
     def forward(self, x, state=None, **kwargs):
-        y = x
+        y = x #(B, L, H) 
 
         # Pre-norm
-        if self.norm is not None and self.prenorm: y = self.norm(y)
-
+        if self.norm is not None and self.prenorm: y = self.norm(y) #(B, L, H) 
+        
         # Black box layer
-        y_for, new_state = self.layer(y, state=state, **kwargs)
+        y_for, new_state = self.layer(y, state=state, **kwargs) #(B, L, H) 
+
         if self.bidirectional:
             assert state is None
             y_rev, _ = self.reverse_layer(y, state=state, **kwargs)
@@ -122,20 +123,18 @@ class SequenceResidualBlock(SequenceModule):
 
         # Post-norm
         if self.norm is not None and not self.prenorm: y = self.norm(y)
-
-        if not self.transposed: y = y.transpose(-1, -2) #(B, H, L) 
        
        ##! Dropout + GELU
-        y = self.drop(self.activation(y)) 
+        y = self.drop(self.activation(y)) #(B, L, H) 
 
         ##! position-wise FFN
+        if not self.transposed: y = y.transpose(-1, -2) #(B, H, L) 
         y = self.output_linear(y)  
+        if not self.transposed: y = y.transpose(-1, -2) #(B, L, H) 
 
         ##! Droput
         y = self.drop(y)
         
-        if not self.transposed: y = y.transpose(-1, -2) #(B, L, H) 
-
         return y + x, state
 
     # def step(self, x, state, **kwargs):
