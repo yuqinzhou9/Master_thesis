@@ -1,0 +1,307 @@
+CONFIG
+├── train
+│   └── seed: 1111                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/loss                                                       
+│       mode: min                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: mirnn-lin-wt2                                                     
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 200                                                         
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       precision: 16                                                           
+│       enable_model_summary: false                                             
+│       track_grad_norm: -1                                                     
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       replace_sampler_ddp: false                                              
+│                                                                               
+├── loader
+│   └── batch_first: true                                                       
+│       batch_size: 50                                                          
+│       l_max: 32                                                               
+│       pad_last: false                                                         
+│       n_context: 1                                                            
+│       n_epoch_double: 0                                                       
+│       limit_tokens: 1.0                                                       
+│       eval:                                                                   
+│         l_max: null                                                           
+│         batch_size: null                                                      
+│                                                                               
+├── dataset
+│   └── _name_: wt2                                                             
+│       data_dir: null                                                          
+│       bpe: true                                                               
+│       roll_seed: 42                                                           
+│       test_split: true                                                        
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 0.0003                                                              
+│       weight_decay: 0.1                                                       
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 30064                                                 
+│       num_training_steps: 300640                                              
+│                                                                               
+├── task
+│   └── _name_: adaptivelm                                                      
+│       init_scale: 0.5                                                         
+│       bias_scale: 1.0                                                         
+│       div_val: 1                                                              
+│       cutoffs:                                                                
+│       - 9997                                                                  
+│       - 19997                                                                 
+│       - 29997                                                                 
+│       tie_weights: true                                                       
+│       tie_projs:                                                              
+│       - true                                                                  
+│       - true                                                                  
+│       - true                                                                  
+│       dropemb: 0.25                                                           
+│       dropsoft: 0.25                                                          
+│       loss: null                                                              
+│       metrics:                                                                
+│       - ppl                                                                   
+│                                                                               
+├── encoder
+│   └── None                                                                    
+├── decoder
+│   └── sequence                                                                
+├── model
+│   └── layer:                                                                  
+│         cell:                                                                 
+│           _name_: mirnn                                                       
+│           hidden_activation: identity                                         
+│           orthogonal: false                                                   
+│           d_input: 384                                                        
+│           lr: 7.5e-05                                                         
+│         _name_: mirnn                                                         
+│         return_output: true                                                   
+│       _name_: model                                                           
+│       prenorm: false                                                          
+│       transposed: false                                                       
+│       n_layers: 1                                                             
+│       d_model: 384                                                            
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool: null                                                              
+│       norm: batch                                                             
+│       dropout: 0.25                                                           
+│       tie_dropout: false                                                      
+│       track_norms: false                                                      
+│       encoder: null                                                           
+│       decoder: null                                                           
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/loss                                                     
+          mode: min                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/loss                                                    
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 1111
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.7 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230727_115008-rlpw8805
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run mirnn-lin-wt2
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/rlpw8805
+[2023-07-27 11:50:13,729][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-27 11:50:13,730][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-27 11:50:13,732][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-27 11:50:13,733][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-27 11:50:13,735][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-27 11:50:13,735][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+Using 16bit None Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+vocab = OpenAIVocab()
+vocab_size: 50257
+[2023-07-27 11:50:14,280][root][INFO] - Loading cached dataset...
+Vocab size: 50264
+BPE: True
+NOTE: no dropout inside recurrent cell
+SequenceLightningModule(
+  (model): SequenceModel(
+    (drop): Identity()
+    (layers): ModuleList(
+      (0): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): MIRNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+    )
+    (norm): Identity()
+  )
+  (encoder): AdaptiveEmbedding(
+    (0): AdaptiveEmbedding(
+      (drop): Dropout(p=0.25, inplace=False)
+      (emb_layers): ModuleList(
+        (0): Embedding(50264, 384)
+      )
+      (emb_projs): ParameterList()
+    )
+  )
+  (decoder): SequenceDecoder(
+    (0): SequenceDecoder(
+      (output_transform): Identity()
+    )
+  )
+  (loss): ProjectedAdaptiveLogSoftmax(
+    (out_layers_biases): ParameterList(  (0): Parameter containing: [torch.FloatTensor of size 50264])
+    (shared_out_projs): ParameterList()
+    (out_projs): OptionalParameterList()
+    (drop): Dropout(p=0.25, inplace=False)
+  )
+  (loss_val): ProjectedAdaptiveLogSoftmax(
+    (out_layers_biases): ParameterList(  (0): Parameter containing: [torch.FloatTensor of size 50264])
+    (shared_out_projs): ParameterList()
+    (out_projs): OptionalParameterList()
+    (drop): Dropout(p=0.25, inplace=False)
+  )
+)
+vocab = OpenAIVocab()
+vocab_size: 50257
+[2023-07-27 11:50:15,916][root][INFO] - Loading cached dataset...
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Vocab size: 50264
+BPE: True
+Hyperparameter groups [{'weight_decay': 0.0, 'lr': 7.5e-05}]
+[2023-07-27 11:50:18,145][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 0.0003 | weight_decay 0.1
+[2023-07-27 11:50:18,145][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 7.5e-05 | weight_decay 0.0
+┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃   ┃ Name    ┃ Type                        ┃ Params ┃
+┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0 │ model   │ SequenceModel               │  591 K │
+│ 1 │ encoder │ AdaptiveEmbedding           │ 19.3 M │
+│ 2 │ decoder │ SequenceDecoder             │      0 │
+│ 3 │ loss    │ ProjectedAdaptiveLogSoftmax │ 51.4 K │
+└───┴─────────┴─────────────────────────────┴────────┘
+Trainable params: 19.9 M                                                        
+Non-trainable params: 0                                                         
+Total params: 19.9 M                                                            
+Total estimated model params size (MB): 39                                      
+SLURM auto-requeueing enabled. Setting signal handlers.
+Epoch 0, global step 1531: 'val/loss' reached 9.30369 (best 9.30369), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/11-50-07-156690/checkpoints/val/loss.ckpt' as top 1
+eval loader: {'l_max': 32, 'batch_size': 50, 'batch_first': True, 'pad_last': False, 'n_context': 1, 'n_epoch_double': 0, 'limit_tokens': 1.0}
+eval loader: {'l_max': 32, 'batch_size': 50, 'batch_first': True, 'pad_last': False, 'n_context': 1, 'n_epoch_double': 0, 'limit_tokens': 1.0}
+Epoch 0/199 ━━━━━━━━━━━━━━━ 1878/1878 0:00:57 •       36.85it/s loss: 9.61      
+                                      0:00:00                   v_num: 8805     
+                                                                val/ppl:        
+                                                                11039.896       
+                                                                val/loss: 9.304 
+                                                                test/ppl:       
+                                                                10246.37        
+                                                                test/loss: 9.227
+                                                                train/ppl:      
+                                                                29570.365       
+                                                                train/loss:     
+                                                                10.258          
+Epoch 1, global step 3062: 'val/loss' reached 6.93076 (best 6.93076), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/11-50-07-156690/checkpoints/val/loss.ckpt' as top 1
+Epoch 1/199 ━━━━━━━━━━━━━━━ 1878/1878 0:00:57 •       36.13it/s loss: 7.34      
+                                      0:00:00                   v_num: 8805     
+                                                                val/ppl:        
+                                                                1031.979        
+                                                                val/loss: 6.931 
+                                                                test/ppl:       
+                                                                915.659         
+                                                                test/loss: 6.809
+                                                                train/ppl:      
+                                                                5570.913        
+                                                                train/loss:     
+                                                                8.397           
+Epoch 2, global step 4593: 'val/loss' reached 6.38419 (best 6.38419), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/11-50-07-156690/checkpoints/val/loss.ckpt' as top 1
+Epoch 2/199 ━━━━━━━━━━━━━━━ 1878/1878 0:00:58 •       35.92it/s loss: 6.65      
+                                      0:00:00                   v_num: 8805     
+                                                                val/ppl: 596.735
+                                                                val/loss: 6.384 
+                                                                test/ppl:       
+                                                                533.275         
+                                                                test/loss: 6.27 
+                                                                train/ppl:      
+                                                                1057.604        
+                                                                train/loss:     
+                                                                6.943           

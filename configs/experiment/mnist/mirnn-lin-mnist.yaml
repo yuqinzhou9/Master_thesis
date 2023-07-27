@@ -4,7 +4,7 @@
 defaults:
   - /pipeline: mnist
   - /model: s4
-  - override /model/layer: rnn
+  - override /model/layer: mirnn
   - override /scheduler: cosine_warmup
   # - override /optimizer: sgd
 
@@ -22,8 +22,8 @@ model:
     cell:
       d_input: 384
       lr: 7.5e-5
-      # hidden_activation: identity
-  track_norms: false
+      hidden_activation: identity
+  track_norms: true
 
 loader:
   batch_size: 50

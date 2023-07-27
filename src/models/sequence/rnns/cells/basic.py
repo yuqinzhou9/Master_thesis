@@ -162,16 +162,102 @@ class RNNCell(CellBase):
 
     def forward(self, input, h):
         # Update hidden state
+        # print(f"h: {torch.mean(h)}; W^hh: {torch.mean(self.W_hh.weight.data)}; W^hh@h: {torch.mean(self.W_hh(h))}")
+        # wandb.log({"after/h": torch.mean(h), "after/W^hh": torch.mean(self.W_hh.weight.data)})
         hidden_preact = self.W_hx(input) + self.W_hh(h)
         hidden = self.activate(hidden_preact)
         ###! the last hidden state
         return hidden, hidden
 
 
+class MIRNNCell(CellBase):
+    name = 'mirnn'
+
+    valid_keys = ['hx', 'hh', 'bias']
+
+    default_initializers = {
+        'hx': 'xavier',
+        'hh': 'xavier',
+    }
+
+    default_architecture = {
+        'bias': False,   ###! no bias
+    }
 
 
+    def __init__(
+            self, d_input, d_model, lr,
+            hidden_activation='tanh',
+            orthogonal=False,
+            ortho_args=None,
+            zero_bias_init=False,
+            **kwargs
+        ):
+
+        self.hidden_activation = hidden_activation
+        self.orthogonal = orthogonal
+        self.ortho_args = ortho_args
+        self.zero_bias_init=zero_bias_init
 
 
+        super().__init__(d_input, d_model, lr, **kwargs)
+        ## register weight decay and the factored lr
+        optim = {"weight_decay": 0.0, "lr": lr}
+        for para in self.named_parameters():
+            setattr(attrgetter(para[0])(self), "_optim", optim)
+
+    def reset_parameters(self):
+        self.W_hx = LinearActivation(
+            self.d_input, self.d_model,
+            bias=self.architecture['bias'],
+            zero_bias_init=self.zero_bias_init,
+            initializer=self.initializers['hx'],
+            activation=self.hidden_activation,
+            # apply_activation=False,
+            activate=False,
+        )
+        self.activate = Activation(self.hidden_activation, self.d_model)
+        self.reset_hidden_to_hidden()
+
+
+    def reset_hidden_to_hidden(self):
+
+        if self.orthogonal:
+
+            if self.ortho_args is None:
+                self.ortho_args = {}
+            self.ortho_args['d_input'] = self.d_model
+            self.ortho_args['d_output'] = self.d_model
+
+            self.W_hh = OrthogonalLinear(**self.ortho_args)
+        else:
+            self.W_hh = LinearActivation(
+                self.d_model, self.d_model,
+                bias=self.architecture['bias'],
+                zero_bias_init=self.zero_bias_init,
+                initializer=self.initializers['hh'],
+                activation=self.hidden_activation,
+                # apply_activation=False,
+                activate=False,
+            )
+            # self.W_hh = nn.Linear(self.d_model, self.d_model, bias=self.architecture['bias'])
+            # get_initializer(self.initializers['hh'], self.hidden_activation)(self.W_hh.weight)
+
+
+    def default_state(self, *batch_shape, device=None):
+        return torch.randn(
+            *batch_shape, self.d_model,
+            device=device,
+            requires_grad=False,
+        )
+
+    def forward(self, input, h):
+        # Update hidden state
+        hidden_preact = self.W_hx(input) * self.W_hh(h)
+        # print(f"h: {torch.mean(h)}; W^hh: {torch.mean(self.W_hh.weight.data)}; W^hh@h: {torch.mean(self.W_hh(h))}")
+        hidden = self.activate(hidden_preact)
+        ###! the last hidden state
+        return hidden, hidden
 
 
 

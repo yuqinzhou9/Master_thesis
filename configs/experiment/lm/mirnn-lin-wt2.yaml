@@ -2,7 +2,7 @@
 defaults:
   - /pipeline: wt2
   - /model: s4
-  - override /model/layer: rnn
+  - override /model/layer: mirnn
   - override /scheduler: cosine_warmup
 
 # Dataset
@@ -24,8 +24,8 @@ task:
 # Model
 model:
   dropout: 0.25
-  tie_dropout: false
-  n_layers: 6
+  tie_dropout: False
+  n_layers: 1
   d_model: 384 
   prenorm: False
   transposed: False
@@ -34,20 +34,18 @@ model:
   layer:
     cell:
       d_input: 384
-      lr: 7.5e-4
+      lr: 7.5e-5
       hidden_activation: identity
   track_norms: false
 
 # Optimizer (adamw)
 optimizer:
-  lr: 3e-5
+  lr: 3e-4
   weight_decay: 0.1
 
 # Scheduler (cosine)
 trainer:
   max_epochs: 200
-  # track_grad_norm: 2
-  # gradient_clip_val: 0.25
 
 scheduler:
   num_warmup_steps: 30064

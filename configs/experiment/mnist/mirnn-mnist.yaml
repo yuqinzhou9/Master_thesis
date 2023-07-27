@@ -4,7 +4,7 @@
 defaults:
   - /pipeline: mnist
   - /model: s4
-  - override /model/layer: rnn
+  - override /model/layer: mirnn
   - override /scheduler: cosine_warmup
   # - override /optimizer: sgd
 
@@ -14,7 +14,7 @@ model:
   tie_dropout: false
   n_layers: 1
   d_model: 384 
-  prenorm: True
+  prenorm: False
   transposed: False
   norm: batch
   pool: null
@@ -23,7 +23,7 @@ model:
       d_input: 384
       lr: 7.5e-5
       # hidden_activation: identity
-  track_norms: false
+  track_norms: true
 
 loader:
   batch_size: 50

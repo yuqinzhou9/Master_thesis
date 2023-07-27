@@ -6,11 +6,12 @@ defaults:
   - /model: s4
   - override /model/layer: rnn
   - override /scheduler: cosine_warmup
+  - override /optimizer: sgd
 
 
 model:
   dropout: 0.2
-  tie_dropout: true
+  tie_dropout: false
   n_layers: 1
   d_model: 384 
   pool: null

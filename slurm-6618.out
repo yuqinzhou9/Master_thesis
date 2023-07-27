@@ -37,7 +37,7 @@ CONFIG
 │       mode: online                                                            
 │       save_dir: .                                                             
 │       id: null                                                                
-│       name: rnn-lin-mnist1-layer                                              
+│       name: mirnn-mnist1-o                                                    
 │                                                                               
 ├── trainer
 │   └── accelerator: gpu                                                        
@@ -93,12 +93,12 @@ CONFIG
 ├── model
 │   └── layer:                                                                  
 │         cell:                                                                 
-│           _name_: rnn                                                         
-│           hidden_activation: identity                                         
+│           _name_: mirnn                                                       
+│           hidden_activation: tanh                                             
 │           orthogonal: false                                                   
 │           d_input: 384                                                        
 │           lr: 7.5e-05                                                         
-│         _name_: rnn                                                           
+│         _name_: mirnn                                                         
 │         return_output: true                                                   
 │       _name_: model                                                           
 │       prenorm: false                                                          
@@ -108,7 +108,7 @@ CONFIG
 │       bidirectional: false                                                    
 │       residual: R                                                             
 │       pool: null                                                              
-│       norm: layer                                                             
+│       norm: batch                                                             
 │       dropout: 0.2                                                            
 │       tie_dropout: false                                                      
 │       track_norms: true                                                       
@@ -144,20 +144,20 @@ CONFIG
                                                                                 
 [rank: 0] Global seed set to 2222
 wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
-wandb: wandb version 0.15.5 is available!  To upgrade, please run:
+wandb: wandb version 0.15.7 is available!  To upgrade, please run:
 wandb:  $ pip install wandb --upgrade
 wandb: Tracking run with wandb version 0.15.4
-wandb: Run data is saved locally in ./wandb/run-20230721_164230-n1maz656
+wandb: Run data is saved locally in ./wandb/run-20230727_114307-lmav526v
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run rnn-lin-mnist1-layer
+wandb: Syncing run mirnn-mnist1-o
 wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
-wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/n1maz656
-[2023-07-21 16:42:36,607][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
-[2023-07-21 16:42:36,608][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
-[2023-07-21 16:42:36,612][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
-[2023-07-21 16:42:36,615][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
-[2023-07-21 16:42:36,617][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
-[2023-07-21 16:42:36,617][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/lmav526v
+[2023-07-27 11:43:12,763][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-27 11:43:12,764][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-27 11:43:12,766][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-27 11:43:12,768][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-27 11:43:12,769][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-27 11:43:12,769][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
 GPU available: True (cuda), used: True
 TPU available: False, using: 0 TPU cores
 IPU available: False, using: 0 IPUs
@@ -172,15 +172,15 @@ SequenceLightningModule(
     (layers): ModuleList(
       (0): SequenceResidualBlock(
         (layer): RNN(
-          (cell): RNNCell(
+          (cell): MIRNNCell(
             (W_hx): Linear(in_features=384, out_features=384, bias=False)
-            (activate): Identity()
+            (activate): Tanh()
             (W_hh): Linear(in_features=384, out_features=384, bias=False)
           )
         )
         (residual): Residual()
         (norm): Normalization(
-          (norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
         )
         (drop): Dropout(p=0.2, inplace=False)
         (output_linear): Sequential(
@@ -202,8 +202,8 @@ SequenceLightningModule(
   )
 )
 Hyperparameter groups [{'lr': 7.5e-05, 'weight_decay': 0.0}]
-[2023-07-21 16:42:38,556][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 0.0003 | weight_decay 0.05
-[2023-07-21 16:42:38,556][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 7.5e-05 | weight_decay 0.0
+[2023-07-27 11:43:14,514][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 0.0003 | weight_decay 0.05
+[2023-07-27 11:43:14,515][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 7.5e-05 | weight_decay 0.0
 ┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
 ┃   ┃ Name    ┃ Type            ┃ Params ┃
 ┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
@@ -216,79 +216,30 @@ Non-trainable params: 0
 Total params: 595 K                                                             
 Total estimated model params size (MB): 2                                       
 SLURM auto-requeueing enabled. Setting signal handlers.
-[2023-07-21 16:42:38,585][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
-[2023-07-21 16:42:38,585][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
-[2023-07-21 16:42:41,737][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
-Epoch 0, global step 1080: 'val/accuracy' reached 0.09717 (best 0.09717), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-21/16-42-29-149000/checkpoints/val/accuracy.ckpt' as top 1
-Epoch 0/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:01 •       13.39it/s loss: nan v_num: 
-                                     0:00:00                   z656             
+[2023-07-27 11:43:14,536][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
+[2023-07-27 11:43:14,536][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
+[2023-07-27 11:43:17,847][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
+Epoch 0, global step 1080: 'val/accuracy' reached 0.17867 (best 0.17867), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/11-43-06-245211/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 0/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:44 •       11.95it/s loss: 2.29 v_num:
+                                     0:00:00                   526v             
                                                                val/accuracy:    
-                                                               0.097 val/loss:  
-                                                               nan              
+                                                               0.179 val/loss:  
+                                                               2.284            
                                                                test/accuracy:   
-                                                               0.098 test/loss: 
-                                                               nan              
+                                                               0.183 test/loss: 
+                                                               2.282            
                                                                train/accuracy:  
-                                                               0.115 train/loss:
-                                                               nan              
-Epoch 1, global step 2160: 'val/accuracy' was not in top 1
-Epoch 1/99 ━━━━━━━━━━━━━━━ 1400/1400 0:02:59 •       13.41it/s loss: nan v_num: 
-                                     0:00:00                   z656             
+                                                               0.13 train/loss: 
+                                                               2.3              
+Epoch 1, global step 2160: 'val/accuracy' reached 0.23750 (best 0.23750), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/11-43-06-245211/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 1/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:47 •       11.79it/s loss: 2.03 v_num:
+                                     0:00:00                   526v             
                                                                val/accuracy:    
-                                                               0.097 val/loss:  
-                                                               nan              
+                                                               0.237 val/loss:  
+                                                               2.04             
                                                                test/accuracy:   
-                                                               0.098 test/loss: 
-                                                               nan              
+                                                               0.241 test/loss: 
+                                                               2.037            
                                                                train/accuracy:  
-                                                               0.099 train/loss:
-                                                               nan              
-Epoch 2, global step 3240: 'val/accuracy' was not in top 1
-Epoch 2/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:00 •       13.44it/s loss: nan v_num: 
-                                     0:00:00                   z656             
-                                                               val/accuracy:    
-                                                               0.097 val/loss:  
-                                                               nan              
-                                                               test/accuracy:   
-                                                               0.098 test/loss: 
-                                                               nan              
-                                                               train/accuracy:  
-                                                               0.099 train/loss:
-                                                               nan              
-Epoch 3, global step 4320: 'val/accuracy' was not in top 1
-Epoch 3/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:01 •       13.47it/s loss: nan v_num: 
-                                     0:00:00                   z656             
-                                                               val/accuracy:    
-                                                               0.097 val/loss:  
-                                                               nan              
-                                                               test/accuracy:   
-                                                               0.098 test/loss: 
-                                                               nan              
-                                                               train/accuracy:  
-                                                               0.099 train/loss:
-                                                               nan              
-Epoch 4, global step 5400: 'val/accuracy' was not in top 1
-Epoch 4/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:00 •       13.46it/s loss: nan v_num: 
-                                     0:00:00                   z656             
-                                                               val/accuracy:    
-                                                               0.097 val/loss:  
-                                                               nan              
-                                                               test/accuracy:   
-                                                               0.098 test/loss: 
-                                                               nan              
-                                                               train/accuracy:  
-                                                               0.099 train/loss:
-                                                               nan              
-Epoch 5, global step 6480: 'val/accuracy' was not in top 1
-Epoch 5/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:01 •       13.38it/s loss: nan v_num: 
-                                     0:00:00                   z656             
-                                                               val/accuracy:    
-                                                               0.097 val/loss:  
-                                                               nan              
-                                                               test/accuracy:   
-                                                               0.098 test/loss: 
-                                                               nan              
-                                                               train/accuracy:  
-                                                               0.099 train/loss:
-                                                               nan              
-slurmstepd: error: *** JOB 5088 ON hendrixgpu10fl CANCELLED AT 2023-07-21T17:00:54 ***
+                                                               0.22 train/loss: 
+                                                               2.132            

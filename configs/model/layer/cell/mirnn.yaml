@@ -1,0 +1,5 @@
+### hyperparameters for cell
+
+_name_: mirnn
+hidden_activation: tanh
+orthogonal: False

@@ -1,0 +1,2054 @@
+CONFIG
+├── train
+│   └── seed: 1111                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/loss                                                       
+│       mode: min                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: mirnn-lin-wt2                                                     
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 200                                                         
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       precision: 16                                                           
+│       enable_model_summary: false                                             
+│       track_grad_norm: -1                                                     
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       replace_sampler_ddp: false                                              
+│                                                                               
+├── loader
+│   └── batch_first: true                                                       
+│       batch_size: 50                                                          
+│       l_max: 128                                                              
+│       pad_last: false                                                         
+│       n_context: 1                                                            
+│       n_epoch_double: 0                                                       
+│       limit_tokens: 1.0                                                       
+│       eval:                                                                   
+│         l_max: null                                                           
+│         batch_size: null                                                      
+│                                                                               
+├── dataset
+│   └── _name_: wt2                                                             
+│       data_dir: null                                                          
+│       bpe: true                                                               
+│       roll_seed: 42                                                           
+│       test_split: true                                                        
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 3.0e-05                                                             
+│       weight_decay: 0.1                                                       
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 7552                                                  
+│       num_training_steps: 75520                                               
+│                                                                               
+├── task
+│   └── _name_: adaptivelm                                                      
+│       init_scale: 0.5                                                         
+│       bias_scale: 1.0                                                         
+│       div_val: 1                                                              
+│       cutoffs:                                                                
+│       - 9997                                                                  
+│       - 19997                                                                 
+│       - 29997                                                                 
+│       tie_weights: true                                                       
+│       tie_projs:                                                              
+│       - true                                                                  
+│       - true                                                                  
+│       - true                                                                  
+│       dropemb: 0.25                                                           
+│       dropsoft: 0.25                                                          
+│       loss: null                                                              
+│       metrics:                                                                
+│       - ppl                                                                   
+│                                                                               
+├── encoder
+│   └── None                                                                    
+├── decoder
+│   └── sequence                                                                
+├── model
+│   └── layer:                                                                  
+│         cell:                                                                 
+│           _name_: mirnn                                                       
+│           hidden_activation: identity                                         
+│           orthogonal: false                                                   
+│           d_input: 384                                                        
+│           lr: 7.5e-06                                                         
+│         _name_: mirnn                                                         
+│         return_output: true                                                   
+│       _name_: model                                                           
+│       prenorm: false                                                          
+│       transposed: false                                                       
+│       n_layers: 1                                                             
+│       d_model: 384                                                            
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool: null                                                              
+│       norm: batch                                                             
+│       dropout: 0.25                                                           
+│       tie_dropout: false                                                      
+│       track_norms: false                                                      
+│       encoder: null                                                           
+│       decoder: null                                                           
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/loss                                                     
+          mode: min                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/loss                                                    
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 1111
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.7 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230727_000938-4y1oi0sq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run mirnn-lin-wt2
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/4y1oi0sq
+[2023-07-27 00:09:43,882][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-07-27 00:09:43,883][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-07-27 00:09:43,887][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-07-27 00:09:43,888][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-07-27 00:09:43,890][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-07-27 00:09:43,890][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+Using 16bit None Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+vocab = OpenAIVocab()
+vocab_size: 50257
+[2023-07-27 00:09:44,250][root][INFO] - Loading cached dataset...
+Vocab size: 50264
+BPE: True
+NOTE: no dropout inside recurrent cell
+SequenceLightningModule(
+  (model): SequenceModel(
+    (drop): Identity()
+    (layers): ModuleList(
+      (0): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): MIRNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.25, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+    )
+    (norm): Identity()
+  )
+  (encoder): AdaptiveEmbedding(
+    (0): AdaptiveEmbedding(
+      (drop): Dropout(p=0.25, inplace=False)
+      (emb_layers): ModuleList(
+        (0): Embedding(50264, 384)
+      )
+      (emb_projs): ParameterList()
+    )
+  )
+  (decoder): SequenceDecoder(
+    (0): SequenceDecoder(
+      (output_transform): Identity()
+    )
+  )
+  (loss): ProjectedAdaptiveLogSoftmax(
+    (out_layers_biases): ParameterList(  (0): Parameter containing: [torch.FloatTensor of size 50264])
+    (shared_out_projs): ParameterList()
+    (out_projs): OptionalParameterList()
+    (drop): Dropout(p=0.25, inplace=False)
+  )
+  (loss_val): ProjectedAdaptiveLogSoftmax(
+    (out_layers_biases): ParameterList(  (0): Parameter containing: [torch.FloatTensor of size 50264])
+    (shared_out_projs): ParameterList()
+    (out_projs): OptionalParameterList()
+    (drop): Dropout(p=0.25, inplace=False)
+  )
+)
+vocab = OpenAIVocab()
+vocab_size: 50257
+[2023-07-27 00:09:45,698][root][INFO] - Loading cached dataset...
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Vocab size: 50264
+BPE: True
+Hyperparameter groups [{'weight_decay': 0.0, 'lr': 7.5e-06}]
+[2023-07-27 00:09:47,930][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 3e-05 | weight_decay 0.1
+[2023-07-27 00:09:47,930][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 7.5e-06 | weight_decay 0.0
+┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃   ┃ Name    ┃ Type                        ┃ Params ┃
+┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0 │ model   │ SequenceModel               │  591 K │
+│ 1 │ encoder │ AdaptiveEmbedding           │ 19.3 M │
+│ 2 │ decoder │ SequenceDecoder             │      0 │
+│ 3 │ loss    │ ProjectedAdaptiveLogSoftmax │ 51.4 K │
+└───┴─────────┴─────────────────────────────┴────────┘
+Trainable params: 19.9 M                                                        
+Non-trainable params: 0                                                         
+Total params: 19.9 M                                                            
+Total estimated model params size (MB): 39                                      
+SLURM auto-requeueing enabled. Setting signal handlers.
+Epoch 0, global step 383: 'val/loss' reached 10.32232 (best 10.32232), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+eval loader: {'l_max': 128, 'batch_size': 50, 'batch_first': True, 'pad_last': False, 'n_context': 1, 'n_epoch_double': 0, 'limit_tokens': 1.0}
+eval loader: {'l_max': 128, 'batch_size': 50, 'batch_first': True, 'pad_last': False, 'n_context': 1, 'n_epoch_double': 0, 'limit_tokens': 1.0}
+Epoch 0/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.44it/s loss: 10.5 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               30435.533        
+                                                               val/loss: 10.322 
+                                                               test/ppl:        
+                                                               29446.822        
+                                                               test/loss: 10.288
+                                                               train/ppl:       
+                                                               36180.266        
+                                                               train/loss:      
+                                                               10.495           
+Epoch 1, global step 766: 'val/loss' reached 10.31415 (best 10.31415), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 1/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.37it/s loss: 10.5 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               30195.158        
+                                                               val/loss: 10.314 
+                                                               test/ppl:        
+                                                               29213.658        
+                                                               test/loss: 10.28 
+                                                               train/ppl:       
+                                                               35976.949        
+                                                               train/loss:      
+                                                               10.489           
+Epoch 2, global step 1149: 'val/loss' reached 10.30134 (best 10.30134), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 2/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.15it/s loss: 10.5 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               29805.547        
+                                                               val/loss: 10.301 
+                                                               test/ppl:        
+                                                               28795.623        
+                                                               test/loss: 10.266
+                                                               train/ppl:       
+                                                               35547.441        
+                                                               train/loss:      
+                                                               10.477           
+Epoch 3, global step 1532: 'val/loss' reached 10.27561 (best 10.27561), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 3/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.15it/s loss: 10.4 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               29049.438        
+                                                               val/loss: 10.276 
+                                                               test/ppl:        
+                                                               28042.707        
+                                                               test/loss: 10.239
+                                                               train/ppl:       
+                                                               34854.758        
+                                                               train/loss:      
+                                                               10.457           
+Epoch 4, global step 1915: 'val/loss' reached 10.23390 (best 10.23390), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 4/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.24it/s loss: 10.4 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               27860.402        
+                                                               val/loss: 10.234 
+                                                               test/ppl:        
+                                                               26827.393        
+                                                               test/loss: 10.195
+                                                               train/ppl:       
+                                                               33646.109        
+                                                               train/loss:      
+                                                               10.423           
+Epoch 5, global step 2298: 'val/loss' reached 10.17598 (best 10.17598), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 5/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.19it/s loss: 10.3 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               26307.701        
+                                                               val/loss: 10.176 
+                                                               test/ppl:        
+                                                               25313.76         
+                                                               test/loss: 10.137
+                                                               train/ppl:       
+                                                               32012.59         
+                                                               train/loss:      
+                                                               10.373           
+Epoch 6, global step 2681: 'val/loss' reached 10.09671 (best 10.09671), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 6/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.25it/s loss: 10.3 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               24304.846        
+                                                               val/loss: 10.097 
+                                                               test/ppl:        
+                                                               23354.125        
+                                                               test/loss: 10.055
+                                                               train/ppl:       
+                                                               29882.596        
+                                                               train/loss:      
+                                                               10.304           
+Epoch 7, global step 3064: 'val/loss' reached 9.97378 (best 9.97378), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 7/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.15it/s loss: 10.1 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               21490.816        
+                                                               val/loss: 9.974  
+                                                               test/ppl:        
+                                                               20588.301        
+                                                               test/loss: 9.93  
+                                                               train/ppl:       
+                                                               27187.367        
+                                                               train/loss:      
+                                                               10.208           
+Epoch 8, global step 3447: 'val/loss' reached 9.73817 (best 9.73817), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 8/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.17it/s loss: 9.91 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               16987.801        
+                                                               val/loss: 9.738  
+                                                               test/ppl:        
+                                                               16217.68         
+                                                               test/loss: 9.69  
+                                                               train/ppl:       
+                                                               22992.109        
+                                                               train/loss:      
+                                                               10.039           
+Epoch 9, global step 3830: 'val/loss' reached 9.28341 (best 9.28341), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 9/199 ━━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.21it/s loss: 9.42 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               10786.618        
+                                                               val/loss: 9.283  
+                                                               test/ppl:        
+                                                               10230.291        
+                                                               test/loss: 9.226 
+                                                               train/ppl:       
+                                                               16542.564        
+                                                               train/loss: 9.705
+Epoch 10, global step 4213: 'val/loss' reached 8.61012 (best 8.61012), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 10/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.27it/s loss: 8.82 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               5499.911         
+                                                               val/loss: 8.61   
+                                                               test/ppl:        
+                                                               5194.484         
+                                                               test/loss: 8.549 
+                                                               train/ppl:       
+                                                               9512.435         
+                                                               train/loss: 9.14 
+Epoch 11, global step 4596: 'val/loss' reached 7.87866 (best 7.87866), saving model to '/home/qvk729/Master_thesis/outputs/2023-07-27/00-09-36-658172/checkpoints/val/loss.ckpt' as top 1
+Epoch 11/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.16it/s loss: 8.05 v_num:
+                                     0:00:00                   i0sq val/ppl:    
+                                                               2641.642         
+                                                               val/loss: 7.879  
+                                                               test/ppl:        
+                                                               2513.813         
+                                                               test/loss: 7.828 
+                                                               train/ppl:       
+                                                               4633.87          
+                                                               train/loss: 8.416
+Epoch 12, global step 4979: 'val/loss' was not in top 1
+Epoch 12/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.14it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 13, global step 5362: 'val/loss' was not in top 1
+Epoch 13/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.12it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 14, global step 5745: 'val/loss' was not in top 1
+Epoch 14/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.21it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 15, global step 6128: 'val/loss' was not in top 1
+Epoch 15/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.27it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 16, global step 6511: 'val/loss' was not in top 1
+Epoch 16/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.24it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 17, global step 6894: 'val/loss' was not in top 1
+Epoch 17/199 ━━━━━━━━━━━━━━━ 471/471 0:00:36 •       13.33it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 18, global step 7277: 'val/loss' was not in top 1
+Epoch 18/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.77it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 19, global step 7660: 'val/loss' was not in top 1
+Epoch 19/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.85it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 20, global step 8043: 'val/loss' was not in top 1
+Epoch 20/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.94it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 21, global step 8426: 'val/loss' was not in top 1
+Epoch 21/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 22, global step 8809: 'val/loss' was not in top 1
+Epoch 22/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.90it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 23, global step 9192: 'val/loss' was not in top 1
+Epoch 23/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.85it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 24, global step 9575: 'val/loss' was not in top 1
+Epoch 24/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.94it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 25, global step 9958: 'val/loss' was not in top 1
+Epoch 25/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.85it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 26, global step 10341: 'val/loss' was not in top 1
+Epoch 26/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.86it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 27, global step 10724: 'val/loss' was not in top 1
+Epoch 27/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.85it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 28, global step 11107: 'val/loss' was not in top 1
+Epoch 28/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.77it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 29, global step 11490: 'val/loss' was not in top 1
+Epoch 29/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.81it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 30, global step 11873: 'val/loss' was not in top 1
+Epoch 30/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 31, global step 12256: 'val/loss' was not in top 1
+Epoch 31/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.83it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 32, global step 12639: 'val/loss' was not in top 1
+Epoch 32/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 33, global step 13022: 'val/loss' was not in top 1
+Epoch 33/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.89it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 34, global step 13405: 'val/loss' was not in top 1
+Epoch 34/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.78it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 35, global step 13788: 'val/loss' was not in top 1
+Epoch 35/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.76it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 36, global step 14171: 'val/loss' was not in top 1
+Epoch 36/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.74it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 37, global step 14554: 'val/loss' was not in top 1
+Epoch 37/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.78it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 38, global step 14937: 'val/loss' was not in top 1
+Epoch 38/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 39, global step 15320: 'val/loss' was not in top 1
+Epoch 39/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.67it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 40, global step 15703: 'val/loss' was not in top 1
+Epoch 40/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.76it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 41, global step 16086: 'val/loss' was not in top 1
+Epoch 41/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.67it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 42, global step 16469: 'val/loss' was not in top 1
+Epoch 42/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.76it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 43, global step 16852: 'val/loss' was not in top 1
+Epoch 43/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.81it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 44, global step 17235: 'val/loss' was not in top 1
+Epoch 44/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.70it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 45, global step 17618: 'val/loss' was not in top 1
+Epoch 45/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.95it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 46, global step 18001: 'val/loss' was not in top 1
+Epoch 46/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.88it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 47, global step 18384: 'val/loss' was not in top 1
+Epoch 47/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.83it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 48, global step 18767: 'val/loss' was not in top 1
+Epoch 48/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.87it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 49, global step 19150: 'val/loss' was not in top 1
+Epoch 49/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.83it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 50, global step 19533: 'val/loss' was not in top 1
+Epoch 50/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.89it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 51, global step 19916: 'val/loss' was not in top 1
+Epoch 51/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.88it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 52, global step 20299: 'val/loss' was not in top 1
+Epoch 52/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.91it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 53, global step 20682: 'val/loss' was not in top 1
+Epoch 53/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.77it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 54, global step 21065: 'val/loss' was not in top 1
+Epoch 54/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.88it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 55, global step 21448: 'val/loss' was not in top 1
+Epoch 55/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.80it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 56, global step 21831: 'val/loss' was not in top 1
+Epoch 56/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.70it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 57, global step 22214: 'val/loss' was not in top 1
+Epoch 57/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.71it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 58, global step 22597: 'val/loss' was not in top 1
+Epoch 58/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 59, global step 22980: 'val/loss' was not in top 1
+Epoch 59/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.71it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 60, global step 23363: 'val/loss' was not in top 1
+Epoch 60/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.89it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 61, global step 23746: 'val/loss' was not in top 1
+Epoch 61/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.80it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 62, global step 24129: 'val/loss' was not in top 1
+Epoch 62/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 63, global step 24512: 'val/loss' was not in top 1
+Epoch 63/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.72it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 64, global step 24895: 'val/loss' was not in top 1
+Epoch 64/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.89it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 65, global step 25278: 'val/loss' was not in top 1
+Epoch 65/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.72it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 66, global step 25661: 'val/loss' was not in top 1
+Epoch 66/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.86it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 67, global step 26044: 'val/loss' was not in top 1
+Epoch 67/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.79it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 68, global step 26427: 'val/loss' was not in top 1
+Epoch 68/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.92it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 69, global step 26810: 'val/loss' was not in top 1
+Epoch 69/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.86it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 70, global step 27193: 'val/loss' was not in top 1
+Epoch 70/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.76it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 71, global step 27576: 'val/loss' was not in top 1
+Epoch 71/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.98it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 72, global step 27959: 'val/loss' was not in top 1
+Epoch 72/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.73it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 73, global step 28342: 'val/loss' was not in top 1
+Epoch 73/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.89it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 74, global step 28725: 'val/loss' was not in top 1
+Epoch 74/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.87it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 75, global step 29108: 'val/loss' was not in top 1
+Epoch 75/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.95it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 76, global step 29491: 'val/loss' was not in top 1
+Epoch 76/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.71it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 77, global step 29874: 'val/loss' was not in top 1
+Epoch 77/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 78, global step 30257: 'val/loss' was not in top 1
+Epoch 78/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.91it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 79, global step 30640: 'val/loss' was not in top 1
+Epoch 79/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.90it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 80, global step 31023: 'val/loss' was not in top 1
+Epoch 80/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.78it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 81, global step 31406: 'val/loss' was not in top 1
+Epoch 81/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.83it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 82, global step 31789: 'val/loss' was not in top 1
+Epoch 82/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.92it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 83, global step 32172: 'val/loss' was not in top 1
+Epoch 83/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.83it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 84, global step 32555: 'val/loss' was not in top 1
+Epoch 84/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 85, global step 32938: 'val/loss' was not in top 1
+Epoch 85/199 ━━━━━━━━━━━━━━━ 471/471 0:00:35 •       13.69it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 86, global step 33321: 'val/loss' was not in top 1
+Epoch 86/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.96it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 87, global step 33704: 'val/loss' was not in top 1
+Epoch 87/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.86it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 88, global step 34087: 'val/loss' was not in top 1
+Epoch 88/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.77it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 89, global step 34470: 'val/loss' was not in top 1
+Epoch 89/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.81it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 90, global step 34853: 'val/loss' was not in top 1
+Epoch 90/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.89it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 91, global step 35236: 'val/loss' was not in top 1
+Epoch 91/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.92it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 92, global step 35619: 'val/loss' was not in top 1
+Epoch 92/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 93, global step 36002: 'val/loss' was not in top 1
+Epoch 93/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.81it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 94, global step 36385: 'val/loss' was not in top 1
+Epoch 94/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.84it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 95, global step 36768: 'val/loss' was not in top 1
+Epoch 95/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.77it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 96, global step 37151: 'val/loss' was not in top 1
+Epoch 96/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.69it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 97, global step 37534: 'val/loss' was not in top 1
+Epoch 97/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.96it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 98, global step 37917: 'val/loss' was not in top 1
+Epoch 98/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       13.94it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 99, global step 38300: 'val/loss' was not in top 1
+Epoch 99/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.11it/s loss: nan v_num: 
+                                     0:00:00                   i0sq val/ppl: nan
+                                                               val/loss: nan    
+                                                               test/ppl: nan    
+                                                               test/loss: nan   
+                                                               train/ppl: nan   
+                                                               train/loss: nan  
+Epoch 100, global step 38683: 'val/loss' was not in top 1
+Epoch 100/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       14.06it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 101, global step 39066: 'val/loss' was not in top 1
+Epoch 101/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       14.09it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 102, global step 39449: 'val/loss' was not in top 1
+Epoch 102/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.13it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 103, global step 39832: 'val/loss' was not in top 1
+Epoch 103/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.15it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 104, global step 40215: 'val/loss' was not in top 1
+Epoch 104/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       14.12it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 105, global step 40598: 'val/loss' was not in top 1
+Epoch 105/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.09it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 106, global step 40981: 'val/loss' was not in top 1
+Epoch 106/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       14.02it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 107, global step 41364: 'val/loss' was not in top 1
+Epoch 107/199 ━━━━━━━━━━━━━━━ 471/471 0:00:34 •       14.01it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 108, global step 41747: 'val/loss' was not in top 1
+Epoch 108/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.35it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 109, global step 42130: 'val/loss' was not in top 1
+Epoch 109/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.32it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 110, global step 42513: 'val/loss' was not in top 1
+Epoch 110/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.15it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 111, global step 42896: 'val/loss' was not in top 1
+Epoch 111/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.48it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 112, global step 43279: 'val/loss' was not in top 1
+Epoch 112/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.43it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 113, global step 43662: 'val/loss' was not in top 1
+Epoch 113/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.27it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 114, global step 44045: 'val/loss' was not in top 1
+Epoch 114/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.51it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 115, global step 44428: 'val/loss' was not in top 1
+Epoch 115/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.38it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 116, global step 44811: 'val/loss' was not in top 1
+Epoch 116/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.27it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 117, global step 45194: 'val/loss' was not in top 1
+Epoch 117/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.46it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 118, global step 45577: 'val/loss' was not in top 1
+Epoch 118/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.44it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 119, global step 45960: 'val/loss' was not in top 1
+Epoch 119/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 120, global step 46343: 'val/loss' was not in top 1
+Epoch 120/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.32it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 121, global step 46726: 'val/loss' was not in top 1
+Epoch 121/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.40it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 122, global step 47109: 'val/loss' was not in top 1
+Epoch 122/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.38it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 123, global step 47492: 'val/loss' was not in top 1
+Epoch 123/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.20it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 124, global step 47875: 'val/loss' was not in top 1
+Epoch 124/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.34it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 125, global step 48258: 'val/loss' was not in top 1
+Epoch 125/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.44it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 126, global step 48641: 'val/loss' was not in top 1
+Epoch 126/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.38it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 127, global step 49024: 'val/loss' was not in top 1
+Epoch 127/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.47it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 128, global step 49407: 'val/loss' was not in top 1
+Epoch 128/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.35it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 129, global step 49790: 'val/loss' was not in top 1
+Epoch 129/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.51it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 130, global step 50173: 'val/loss' was not in top 1
+Epoch 130/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.42it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 131, global step 50556: 'val/loss' was not in top 1
+Epoch 131/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.47it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 132, global step 50939: 'val/loss' was not in top 1
+Epoch 132/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.40it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 133, global step 51322: 'val/loss' was not in top 1
+Epoch 133/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.44it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 134, global step 51705: 'val/loss' was not in top 1
+Epoch 134/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.39it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 135, global step 52088: 'val/loss' was not in top 1
+Epoch 135/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.36it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 136, global step 52471: 'val/loss' was not in top 1
+Epoch 136/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 137, global step 52854: 'val/loss' was not in top 1
+Epoch 137/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.31it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 138, global step 53237: 'val/loss' was not in top 1
+Epoch 138/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.43it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 139, global step 53620: 'val/loss' was not in top 1
+Epoch 139/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 140, global step 54003: 'val/loss' was not in top 1
+Epoch 140/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.53it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 141, global step 54386: 'val/loss' was not in top 1
+Epoch 141/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.32it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 142, global step 54769: 'val/loss' was not in top 1
+Epoch 142/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.39it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 143, global step 55152: 'val/loss' was not in top 1
+Epoch 143/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.36it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 144, global step 55535: 'val/loss' was not in top 1
+Epoch 144/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 145, global step 55918: 'val/loss' was not in top 1
+Epoch 145/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.44it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 146, global step 56301: 'val/loss' was not in top 1
+Epoch 146/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.53it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 147, global step 56684: 'val/loss' was not in top 1
+Epoch 147/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.36it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 148, global step 57067: 'val/loss' was not in top 1
+Epoch 148/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.49it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 149, global step 57450: 'val/loss' was not in top 1
+Epoch 149/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.37it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 150, global step 57833: 'val/loss' was not in top 1
+Epoch 150/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 151, global step 58216: 'val/loss' was not in top 1
+Epoch 151/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.39it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 152, global step 58599: 'val/loss' was not in top 1
+Epoch 152/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.49it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 153, global step 58982: 'val/loss' was not in top 1
+Epoch 153/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.44it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 154, global step 59365: 'val/loss' was not in top 1
+Epoch 154/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 155, global step 59748: 'val/loss' was not in top 1
+Epoch 155/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.35it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 156, global step 60131: 'val/loss' was not in top 1
+Epoch 156/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.33it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 157, global step 60514: 'val/loss' was not in top 1
+Epoch 157/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.52it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 158, global step 60897: 'val/loss' was not in top 1
+Epoch 158/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.48it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 159, global step 61280: 'val/loss' was not in top 1
+Epoch 159/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.33it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 160, global step 61663: 'val/loss' was not in top 1
+Epoch 160/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.40it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 161, global step 62046: 'val/loss' was not in top 1
+Epoch 161/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.29it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 162, global step 62429: 'val/loss' was not in top 1
+Epoch 162/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.49it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 163, global step 62812: 'val/loss' was not in top 1
+Epoch 163/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.37it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 164, global step 63195: 'val/loss' was not in top 1
+Epoch 164/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.38it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 165, global step 63578: 'val/loss' was not in top 1
+Epoch 165/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.39it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 166, global step 63961: 'val/loss' was not in top 1
+Epoch 166/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.37it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 167, global step 64344: 'val/loss' was not in top 1
+Epoch 167/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.42it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 168, global step 64727: 'val/loss' was not in top 1
+Epoch 168/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.40it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 169, global step 65110: 'val/loss' was not in top 1
+Epoch 169/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.32it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 170, global step 65493: 'val/loss' was not in top 1
+Epoch 170/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.41it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 171, global step 65876: 'val/loss' was not in top 1
+Epoch 171/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.25it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 172, global step 66259: 'val/loss' was not in top 1
+Epoch 172/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.48it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 173, global step 66642: 'val/loss' was not in top 1
+Epoch 173/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.37it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 174, global step 67025: 'val/loss' was not in top 1
+Epoch 174/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.41it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 175, global step 67408: 'val/loss' was not in top 1
+Epoch 175/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.38it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 176, global step 67791: 'val/loss' was not in top 1
+Epoch 176/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.32it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 177, global step 68174: 'val/loss' was not in top 1
+Epoch 177/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.35it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 178, global step 68557: 'val/loss' was not in top 1
+Epoch 178/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.38it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 179, global step 68940: 'val/loss' was not in top 1
+Epoch 179/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.30it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 180, global step 69323: 'val/loss' was not in top 1
+Epoch 180/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.41it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 181, global step 69706: 'val/loss' was not in top 1
+Epoch 181/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.34it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 182, global step 70089: 'val/loss' was not in top 1
+Epoch 182/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.33it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 183, global step 70472: 'val/loss' was not in top 1
+Epoch 183/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.42it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 184, global step 70855: 'val/loss' was not in top 1
+Epoch 184/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.46it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 185, global step 71238: 'val/loss' was not in top 1
+Epoch 185/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.39it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 186, global step 71621: 'val/loss' was not in top 1
+Epoch 186/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.45it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 187, global step 72004: 'val/loss' was not in top 1
+Epoch 187/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.28it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 188, global step 72387: 'val/loss' was not in top 1
+Epoch 188/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.42it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 189, global step 72770: 'val/loss' was not in top 1
+Epoch 189/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.33it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 190, global step 73153: 'val/loss' was not in top 1
+Epoch 190/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.37it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 191, global step 73536: 'val/loss' was not in top 1
+Epoch 191/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.39it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 192, global step 73919: 'val/loss' was not in top 1
+Epoch 192/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.29it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 193, global step 74302: 'val/loss' was not in top 1
+Epoch 193/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.36it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 194, global step 74685: 'val/loss' was not in top 1
+Epoch 194/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.25it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 195, global step 75068: 'val/loss' was not in top 1
+Epoch 195/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.30it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 196, global step 75451: 'val/loss' was not in top 1
+Epoch 196/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.35it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 197, global step 75834: 'val/loss' was not in top 1
+Epoch 197/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.27it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 198, global step 76217: 'val/loss' was not in top 1
+Epoch 198/199 ━━━━━━━━━━━━━━━ 471/471 0:00:33 •       14.41it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+Epoch 199, global step 76600: 'val/loss' was not in top 1
+`Trainer.fit` stopped: `max_epochs=200` reached.
+Epoch 199/199 ━━━━━━━━━━━━━━━ 471/471 0:00:32 •       14.49it/s loss: nan v_num:
+                                      0:00:00                   i0sq val/ppl:   
+                                                                nan val/loss:   
+                                                                nan test/ppl:   
+                                                                nan test/loss:  
+                                                                nan train/ppl:  
+                                                                nan train/loss: 
+                                                                nan             
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇███
+wandb:           test/loss ██▁                                     
+wandb:            test/ppl █▇▁                                     
+wandb:         timer/epoch ▇██▇▄▄▅▅▅▄▄▄▅▅▄▄▄▄▄▄▃▃▁▁▂▁▁▂▂▂▂▁▂▁▂▂▁▂▂▁
+wandb:          timer/step ▅▅▇▅▅▃▄█▅▄▇▅▆▄▃▄▃▆▆▂▆▃▁▃▂▁▇█▄▇▂▃▂▁▂▁▁▂▄▁
+wandb:    timer/validation ▆▇▆▇▄▄▄▄▄▃▄▄▃▆▃█▅▄▆▄▃▃▅▄▁▁▁▁▅▁▁▁▂▁▂▁▂▂▂▂
+wandb:          train/loss ██▁                                     
+wandb:           train/ppl █▇▁                                     
+wandb:       trainer/epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:        trainer/loss ██▃▁                                    
+wandb:      trainer/lr/pg1 ▂▃▅▇██████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▁▁▁▁▁▁▁
+wandb:      trainer/lr/pg2 ▂▃▅▇██████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▁▁▁▁▁▁▁
+wandb:            val/loss ██▁                                     
+wandb:             val/ppl █▇▁                                     
+wandb: 
+wandb: Run summary:
+wandb:               epoch 199
+wandb:           test/loss nan
+wandb:            test/ppl nan
+wandb:         timer/epoch 33.00971
+wandb:          timer/step 0.07476
+wandb:    timer/validation 3.1356
+wandb:          train/loss nan
+wandb:           train/ppl nan
+wandb:       trainer/epoch 199.0
+wandb: trainer/global_step 76599
+wandb:        trainer/loss nan
+wandb:      trainer/lr/pg1 0.0
+wandb:      trainer/lr/pg2 0.0
+wandb:            val/loss nan
+wandb:             val/ppl nan
+wandb: 
+wandb: 🚀 View run mirnn-lin-wt2 at: https://wandb.ai/yuqinzhou/TNLM/runs/4y1oi0sq
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230727_000938-4y1oi0sq/logs

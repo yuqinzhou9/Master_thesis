@@ -8,9 +8,10 @@ defaults:
 # Dataset
 dataset:
   test_split: True
+
 loader:
-  batch_size: 32
-  l_max: 2048
+  batch_size: 50
+  l_max: 16
   n_context: 1
   eval:
     batch_size: null
@@ -24,8 +25,8 @@ task:
 # Model
 model:
   dropout: 0.25
-  tie_dropout: true
-  n_layers: 6
+  tie_dropout: false
+  n_layers: 1
   d_model: 384 
   prenorm: False
   transposed: False
@@ -34,22 +35,33 @@ model:
   layer:
     cell:
       d_input: 384
-      lr: 7.5e-5
+      lr: 7.5e-4
       # hidden_activation: identity
   track_norms: false
 
 # Optimizer (adamw)
 optimizer:
-  lr: 3e-4
+  lr: 3e-3
   weight_decay: 0.1
 
 # Scheduler (cosine)
 trainer:
-  max_epochs: 1000
+  max_epochs: 200
 
 scheduler:
-  num_warmup_steps: 10000
-  num_training_steps: 800000
+  num_warmup_steps: 60096
+  num_training_steps: 600960
+
+  # l_max: num_steps per epoch : 20 epochs : train  (50 batch size, bpe, 0.8 train)
+  # 16 : 3756 : 75120 : 60096
+  # 32 : 1879 : 37580 : 30064
+  # 64 : 941 : 18820 : 15056
+  # 128 : 472 : 9440 : 7552
+  # 256 : 238 : 4760 : 3808
+  # 512 : 120 : 2400 : 1920
+  # 1024 : 61: 1220 : 976
+
+
 
 train:
   seed: 1111
