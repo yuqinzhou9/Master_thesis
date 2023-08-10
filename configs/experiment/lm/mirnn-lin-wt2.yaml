@@ -10,7 +10,7 @@ dataset:
   test_split: True
 loader:
   batch_size: 50
-  l_max: 32
+  l_max: 128
   n_context: 1
   eval:
     batch_size: null
@@ -25,7 +25,7 @@ task:
 model:
   dropout: 0.25
   tie_dropout: False
-  n_layers: 1
+  n_layers: 6
   d_model: 384 
   prenorm: False
   transposed: False
@@ -48,8 +48,8 @@ trainer:
   max_epochs: 200
 
 scheduler:
-  num_warmup_steps: 30064
-  num_training_steps: 300640
+  num_warmup_steps: 7552
+  num_training_steps: 75520
 
 train:
   seed: 1111

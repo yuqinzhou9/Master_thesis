@@ -27,6 +27,8 @@ def get_initializer(name, activation=None):
         initializer = partial(torch.nn.init.kaiming_normal_, nonlinearity=nonlinearity)
     elif name == 'xavier':
         initializer = torch.nn.init.xavier_normal_
+    elif name == 'uniform_range':
+        initializer = partial(torch.nn.init.uniform_, a=0.9, b=0.99)
     elif name == 'zero':
         initializer = partial(torch.nn.init.constant_, val=0)
     elif name == 'one':

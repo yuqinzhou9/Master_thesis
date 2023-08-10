@@ -6,12 +6,12 @@ defaults:
   - /model: s4
   - override /model/layer: rnn
   - override /scheduler: cosine_warmup
-  - override /optimizer: sgd
+  # - override /optimizer: sgd
 
 
 model:
   dropout: 0.2
-  tie_dropout: false
+  tie_dropout: False
   n_layers: 1
   d_model: 384 
   prenorm: False
@@ -31,7 +31,7 @@ loader:
 
 optimizer:
   lr: 3e-4
-  # weight_decay: 0.05
+  weight_decay: 0.05
 
 trainer:
   max_epochs: 200

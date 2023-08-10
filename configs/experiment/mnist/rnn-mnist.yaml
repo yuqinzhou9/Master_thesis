@@ -14,7 +14,7 @@ model:
   tie_dropout: false
   n_layers: 1
   d_model: 384 
-  prenorm: True
+  prenorm: False
   transposed: False
   norm: batch
   pool: null
@@ -22,7 +22,7 @@ model:
     cell:
       d_input: 384
       lr: 7.5e-5
-      # hidden_activation: identity
+      hidden_activation: gelu
   track_norms: false
 
 loader:
@@ -37,6 +37,7 @@ trainer:
   track_grad_norm: 2
   # gradient_clip_val: 0.25
   # gradient_clip_algorithm: norm
+  log_every_n_steps: 1
 
 scheduler:
   num_warmup_steps: 10800  # 10 epoch (1080 * 10)

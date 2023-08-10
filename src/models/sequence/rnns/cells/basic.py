@@ -9,6 +9,7 @@ from src.models.nn.gate import Gate
 from src.models.nn.orthogonal import OrthogonalLinear
 from src.models.sequence.base import SequenceModule
 from operator import attrgetter
+import wandb
 
 class CellBase(SequenceModule):
     """Abstract class for our recurrent cell interface.
@@ -163,7 +164,7 @@ class RNNCell(CellBase):
     def forward(self, input, h):
         # Update hidden state
         # print(f"h: {torch.mean(h)}; W^hh: {torch.mean(self.W_hh.weight.data)}; W^hh@h: {torch.mean(self.W_hh(h))}")
-        # wandb.log({"after/h": torch.mean(h), "after/W^hh": torch.mean(self.W_hh.weight.data)})
+        # wandb.log({"h_after/rnn": torch.mean(h)})
         hidden_preact = self.W_hx(input) + self.W_hh(h)
         hidden = self.activate(hidden_preact)
         ###! the last hidden state
@@ -248,11 +249,24 @@ class MIRNNCell(CellBase):
         return torch.randn(
             *batch_shape, self.d_model,
             device=device,
-            requires_grad=False,
+            requires_grad=False
         )
+        
+        # return nn.init.xavier_normal_(torch.empty(
+        #     *batch_shape, self.d_model,
+        #     device=device,
+        #     requires_grad=False)
+        # )
+
+        # return nn.init.uniform_(torch.empty(
+        #     *batch_shape, self.d_model,
+        #     device=device,
+        #     requires_grad=False,
+        # ), 0.9, 0.99)
 
     def forward(self, input, h):
         # Update hidden state
+        # wandb.log({"h_after/rnn": torch.mean(h)})
         hidden_preact = self.W_hx(input) * self.W_hh(h)
         # print(f"h: {torch.mean(h)}; W^hh: {torch.mean(self.W_hh.weight.data)}; W^hh@h: {torch.mean(self.W_hh(h))}")
         hidden = self.activate(hidden_preact)

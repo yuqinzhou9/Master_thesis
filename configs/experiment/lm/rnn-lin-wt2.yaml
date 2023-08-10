@@ -10,7 +10,7 @@ dataset:
   test_split: True
 loader:
   batch_size: 50
-  l_max: 32
+  l_max: 1024
   n_context: 1
   eval:
     batch_size: null
@@ -34,13 +34,13 @@ model:
   layer:
     cell:
       d_input: 384
-      lr: 7.5e-4
+      lr: 7.5e-5
       hidden_activation: identity
   track_norms: false
 
 # Optimizer (adamw)
 optimizer:
-  lr: 3e-5
+  lr: 3e-4
   weight_decay: 0.1
 
 # Scheduler (cosine)
@@ -50,8 +50,8 @@ trainer:
   # gradient_clip_val: 0.25
 
 scheduler:
-  num_warmup_steps: 30064
-  num_training_steps: 300640
+  num_warmup_steps: 976
+  num_training_steps: 9760
 
 train:
   seed: 1111

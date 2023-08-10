@@ -106,7 +106,7 @@ class SequenceResidualBlock(SequenceModule):
 
     def forward(self, x, state=None, **kwargs):
         y = x #(B, L, H) 
-        # wandb.log({"after/begin": torch.mean(y)})
+        # wandb.log({"y_after/begin": torch.mean(y)})
 
         # Pre-norm
         if self.norm is not None and self.prenorm: y = self.norm(y) #(B, L, H) 
@@ -114,7 +114,7 @@ class SequenceResidualBlock(SequenceModule):
         # Black box layer
         y_for, new_state = self.layer(y, state=state, **kwargs) #(B, L, H) 
         # print(f"After RNN layer: {torch.mean(y_for)}")
-        # wandb.log({"after/rnn": torch.mean(y_for)})
+        # wandb.log({"y_after/rnn": torch.mean(y_for), "y_after/rnn_last": torch.mean(new_state)})
 
         if self.bidirectional:
             assert state is None
@@ -127,19 +127,20 @@ class SequenceResidualBlock(SequenceModule):
 
         # Post-norm
         if self.norm is not None and not self.prenorm: y = self.norm(y)
-        # wandb.log({"after/post-norm": torch.mean(y)})   
+        # wandb.log({"y_after/post-norm": torch.mean(y)})   
 
        ##! Dropout + GELU
         y = self.drop(self.activation(y)) #(B, L, H) 
         # print(f"After activation: {torch.mean(y)}")
-        # wandb.log({"after/act": torch.mean(y)})
+        # wandb.log({"y_after/act": torch.mean(y)})
 
-        ##! position-wise FFN (GLU)
+        #! position-wise FFN (GLU)
         if not self.transposed: y = y.transpose(-1, -2) #(B, H, L) 
         y = self.output_linear(y)  
         if not self.transposed: y = y.transpose(-1, -2) #(B, L, H) 
+        
         # print(f"After GLU: {torch.mean(y)}")
-        # wandb.log({"after/glu": torch.mean(y)})
+        # wandb.log({"y_after/glu": torch.mean(y)})
 
 
         ##! Droput

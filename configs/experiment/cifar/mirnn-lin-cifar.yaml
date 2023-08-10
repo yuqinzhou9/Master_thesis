@@ -2,7 +2,7 @@
 # Basic rnn experiment
 # Override model/layer/cell for different RNN cells, e.g. `python -m train experiment=rnn model/layer/cell=hippo-legs
 defaults:
-  - /pipeline: mnist
+  - /pipeline: cifar
   - /model: s4
   - override /model/layer: mirnn
   - override /scheduler: cosine_warmup
@@ -22,7 +22,7 @@ model:
     cell:
       d_input: 384
       lr: 7.5e-6
-      hidden_activation: relu
+      hidden_activation: identity
   track_norms: True
 
 loader:
@@ -40,8 +40,8 @@ trainer:
   log_every_n_steps: 1
 
 scheduler:
-  num_warmup_steps: 10800  # 10 epoch (1080 * 10)
-  num_training_steps: 108000  # 100 epochs
+  num_warmup_steps: 18000  
+  num_training_steps: 180000 
 
 train:
   seed: 2222

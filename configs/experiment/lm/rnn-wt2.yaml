@@ -11,7 +11,7 @@ dataset:
 
 loader:
   batch_size: 50
-  l_max: 16
+  l_max: 128
   n_context: 1
   eval:
     batch_size: null
@@ -26,7 +26,7 @@ task:
 model:
   dropout: 0.25
   tie_dropout: false
-  n_layers: 1
+  n_layers: 6
   d_model: 384 
   prenorm: False
   transposed: False
@@ -35,13 +35,13 @@ model:
   layer:
     cell:
       d_input: 384
-      lr: 7.5e-4
+      lr: 7.5e-5
       # hidden_activation: identity
   track_norms: false
 
 # Optimizer (adamw)
 optimizer:
-  lr: 3e-3
+  lr: 3e-4
   weight_decay: 0.1
 
 # Scheduler (cosine)
@@ -49,8 +49,8 @@ trainer:
   max_epochs: 200
 
 scheduler:
-  num_warmup_steps: 60096
-  num_training_steps: 600960
+  num_warmup_steps: 7552
+  num_training_steps: 75520
 
   # l_max: num_steps per epoch : 20 epochs : train  (50 batch size, bpe, 0.8 train)
   # 16 : 3756 : 75120 : 60096
@@ -60,7 +60,6 @@ scheduler:
   # 256 : 238 : 4760 : 3808
   # 512 : 120 : 2400 : 1920
   # 1024 : 61: 1220 : 976
-
 
 
 train:

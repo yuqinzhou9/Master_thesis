@@ -32,6 +32,8 @@ def Activation(activation=None, size=None, dim=-1):
         return SquaredReLU()
     elif activation == 'laplace':
         return Laplace()
+    elif activation == 'softmax':
+        return nn.Softmax()
     # Earlier experimentation with a LN in the middle of the block instead of activation
     # IIRC ConvNext does something like this?
     # elif activation == 'ln':
