@@ -1,0 +1,1609 @@
+CONFIG
+├── train
+│   └── seed: 2222                                                              
+│       name: null                                                              
+│       interval: step                                                          
+│       monitor: val/accuracy                                                   
+│       mode: max                                                               
+│       ema: 0.0                                                                
+│       test: false                                                             
+│       debug: false                                                            
+│       ignore_warnings: false                                                  
+│       state:                                                                  
+│         mode: null                                                            
+│         n_context: 0                                                          
+│         n_context_eval: 0                                                     
+│       ckpt: null                                                              
+│       disable_dataset: false                                                  
+│       validate_at_start: false                                                
+│       pretrained_model_path: null                                             
+│       pretrained_model_strict_load: true                                      
+│       pretrained_model_state_hook:                                            
+│         _name_: null                                                          
+│       post_init_hook:                                                         
+│         _name_: null                                                          
+│       layer_decay:                                                            
+│         _name_: null                                                          
+│         decay: 0.7                                                            
+│                                                                               
+├── tolerance
+│   └── logdir: ./resume                                                        
+│       id: null                                                                
+│                                                                               
+├── wandb
+│   └── project: TNLM                                                           
+│       group: ''                                                               
+│       job_type: training                                                      
+│       mode: online                                                            
+│       save_dir: .                                                             
+│       id: null                                                                
+│       name: rnn-lin-mnist1-o                                                  
+│                                                                               
+├── trainer
+│   └── accelerator: gpu                                                        
+│       strategy: null                                                          
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       max_epochs: 100                                                         
+│       gradient_clip_val: null                                                 
+│       log_every_n_steps: 10                                                   
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       enable_model_summary: false                                             
+│       track_grad_norm: 2                                                      
+│                                                                               
+├── loader
+│   └── batch_size: 50                                                          
+│       num_workers: 4                                                          
+│       pin_memory: true                                                        
+│       drop_last: true                                                         
+│                                                                               
+├── dataset
+│   └── _name_: mnist                                                           
+│       permute: true                                                           
+│       val_split: 0.1                                                          
+│       seed: 42                                                                
+│                                                                               
+├── task
+│   └── _name_: base                                                            
+│       loss: cross_entropy                                                     
+│       metrics:                                                                
+│       - accuracy                                                              
+│       torchmetrics: null                                                      
+│                                                                               
+├── optimizer
+│   └── _name_: adamw                                                           
+│       lr: 0.0003                                                              
+│       weight_decay: 0.05                                                      
+│       betas:                                                                  
+│       - 0.9                                                                   
+│       - 0.999                                                                 
+│                                                                               
+├── scheduler
+│   └── _name_: cosine_warmup                                                   
+│       num_warmup_steps: 10800                                                 
+│       num_training_steps: 108000                                              
+│                                                                               
+├── encoder
+│   └── linear                                                                  
+├── decoder
+│   └── _name_: sequence                                                        
+│       mode: pool                                                              
+│                                                                               
+├── model
+│   └── layer:                                                                  
+│         cell:                                                                 
+│           _name_: rnn                                                         
+│           hidden_activation: identity                                         
+│           orthogonal: false                                                   
+│           d_input: 384                                                        
+│           lr: 7.5e-05                                                         
+│         _name_: rnn                                                           
+│         return_output: true                                                   
+│       _name_: model                                                           
+│       prenorm: true                                                           
+│       transposed: false                                                       
+│       n_layers: 1                                                             
+│       d_model: 384                                                            
+│       bidirectional: false                                                    
+│       residual: R                                                             
+│       pool: null                                                              
+│       norm: batch                                                             
+│       dropout: 0.2                                                            
+│       tie_dropout: false                                                      
+│       track_norms: true                                                       
+│       encoder: null                                                           
+│       decoder: null                                                           
+│                                                                               
+└── callbacks
+    └── learning_rate_monitor:                                                  
+          logging_interval: step                                                
+        timer:                                                                  
+          step: true                                                            
+          inter_step: false                                                     
+          epoch: true                                                           
+          val: true                                                             
+        params:                                                                 
+          total: true                                                           
+          trainable: true                                                       
+          fixed: true                                                           
+        model_checkpoint:                                                       
+          monitor: val/accuracy                                                 
+          mode: max                                                             
+          save_top_k: 1                                                         
+          save_last: true                                                       
+          dirpath: checkpoints/                                                 
+          filename: val/accuracy                                                
+          auto_insert_metric_name: false                                        
+          verbose: true                                                         
+        rich_model_summary:                                                     
+          max_depth: 1                                                          
+        rich_progress_bar:                                                      
+          refresh_rate: 1                                                       
+          leave: true                                                           
+                                                                                
+[rank: 0] Global seed set to 2222
+wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.8 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in ./wandb/run-20230814_160146-0wuualhu
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run rnn-lin-mnist1-o
+wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/0wuualhu
+[2023-08-14 16:01:52,947][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-08-14 16:01:52,948][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-08-14 16:01:52,954][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-08-14 16:01:52,957][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-08-14 16:01:52,964][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-08-14 16:01:52,965][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+NOTE: no dropout inside recurrent cell
+SequenceLightningModule(
+  (model): SequenceModel(
+    (drop): Identity()
+    (layers): ModuleList(
+      (0): SequenceResidualBlock(
+        (layer): RNN(
+          (cell): RNNCell(
+            (W_hx): Linear(in_features=384, out_features=384, bias=False)
+            (activate): Identity()
+            (W_hh): Linear(in_features=384, out_features=384, bias=False)
+          )
+        )
+        (residual): Residual()
+        (norm): Normalization(
+          (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (drop): Dropout(p=0.2, inplace=False)
+        (output_linear): Sequential(
+          (0): Conv1d(384, 768, kernel_size=(1,), stride=(1,))
+          (1): GLU(dim=-2)
+        )
+        (activation): GELU(approximate=none)
+      )
+    )
+    (norm): Normalization(
+      (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (encoder): Linear(
+    (0): Linear(in_features=1, out_features=384, bias=True)
+  )
+  (decoder): SequenceDecoder(
+    (0): SequenceDecoder(
+      (output_transform): Linear(in_features=384, out_features=10, bias=True)
+    )
+  )
+)
+Hyperparameter groups [{'lr': 7.5e-05, 'weight_decay': 0.0}]
+[2023-08-14 16:01:55,801][__main__][INFO] - Optimizer group 0 | 10 tensors | lr 0.0003 | weight_decay 0.05
+[2023-08-14 16:01:55,801][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 7.5e-05 | weight_decay 0.0
+┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃   ┃ Name    ┃ Type            ┃ Params ┃
+┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0 │ model   │ SequenceModel   │  592 K │
+│ 1 │ encoder │ Linear          │    768 │
+│ 2 │ decoder │ SequenceDecoder │  3.9 K │
+└───┴─────────┴─────────────────┴────────┘
+Trainable params: 596 K                                                         
+Non-trainable params: 0                                                         
+Total params: 596 K                                                             
+Total estimated model params size (MB): 2                                       
+SLURM auto-requeueing enabled. Setting signal handlers.
+[2023-08-14 16:01:55,818][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
+[2023-08-14 16:01:55,818][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
+[2023-08-14 16:01:59,546][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
+Epoch 0, global step 1080: 'val/accuracy' reached 0.14433 (best 0.14433), saving model to '/home/qvk729/Master_thesis/outputs/2023-08-14/16-01-45-265982/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 0/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:31 •       12.15it/s loss: 2.24 v_num:
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.144 val/loss:  
+                                                               2.233            
+                                                               test/accuracy:   
+                                                               0.138 test/loss: 
+                                                               2.231            
+                                                               train/accuracy:  
+                                                               0.145 train/loss:
+                                                               2.264            
+Epoch 1, global step 2160: 'val/accuracy' reached 0.16683 (best 0.16683), saving model to '/home/qvk729/Master_thesis/outputs/2023-08-14/16-01-45-265982/checkpoints/val/accuracy.ckpt' as top 1
+Epoch 1/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:31 •       12.03it/s loss: 2.18 v_num:
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.167 val/loss:  
+                                                               2.195            
+                                                               test/accuracy:   
+                                                               0.157 test/loss: 
+                                                               2.189            
+                                                               train/accuracy:  
+                                                               0.158 train/loss:
+                                                               2.207            
+Epoch 2, global step 3240: 'val/accuracy' was not in top 1
+Epoch 2/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.01it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.134 train/loss:
+                                                               2.284            
+Epoch 3, global step 4320: 'val/accuracy' was not in top 1
+Epoch 3/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.18it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.115 train/loss:
+                                                               2.297            
+Epoch 4, global step 5400: 'val/accuracy' was not in top 1
+Epoch 4/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.19it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.113 train/loss:
+                                                               2.299            
+Epoch 5, global step 6480: 'val/accuracy' was not in top 1
+Epoch 5/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.26it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.113 train/loss:
+                                                               2.301            
+Epoch 6, global step 7560: 'val/accuracy' was not in top 1
+Epoch 6/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.11it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.113 train/loss:
+                                                               2.301            
+Epoch 7, global step 8640: 'val/accuracy' was not in top 1
+Epoch 7/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.01it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.113 train/loss:
+                                                               2.301            
+Epoch 8, global step 9720: 'val/accuracy' was not in top 1
+Epoch 8/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.30it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.113 train/loss:
+                                                               2.301            
+Epoch 9, global step 10800: 'val/accuracy' was not in top 1
+Epoch 9/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.18it/s loss: 2.3 v_num: 
+                                     0:00:00                   alhu             
+                                                               val/accuracy:    
+                                                               0.111 val/loss:  
+                                                               2.301            
+                                                               test/accuracy:   
+                                                               0.113 test/loss: 
+                                                               2.301            
+                                                               train/accuracy:  
+                                                               0.113 train/loss:
+                                                               2.302            
+Epoch 10, global step 11880: 'val/accuracy' was not in top 1
+Epoch 10/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.19it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 11, global step 12960: 'val/accuracy' was not in top 1
+Epoch 11/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 12, global step 14040: 'val/accuracy' was not in top 1
+Epoch 12/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.21it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 13, global step 15120: 'val/accuracy' was not in top 1
+Epoch 13/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.19it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 14, global step 16200: 'val/accuracy' was not in top 1
+Epoch 14/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.02it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 15, global step 17280: 'val/accuracy' was not in top 1
+Epoch 15/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.19it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 16, global step 18360: 'val/accuracy' was not in top 1
+Epoch 16/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.19it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 17, global step 19440: 'val/accuracy' was not in top 1
+Epoch 17/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 18, global step 20520: 'val/accuracy' was not in top 1
+Epoch 18/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 19, global step 21600: 'val/accuracy' was not in top 1
+Epoch 19/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.26it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 20, global step 22680: 'val/accuracy' was not in top 1
+Epoch 20/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.01it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 21, global step 23760: 'val/accuracy' was not in top 1
+Epoch 21/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.11it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 22, global step 24840: 'val/accuracy' was not in top 1
+Epoch 22/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.18it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 23, global step 25920: 'val/accuracy' was not in top 1
+Epoch 23/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.02it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 24, global step 27000: 'val/accuracy' was not in top 1
+Epoch 24/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.21it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 25, global step 28080: 'val/accuracy' was not in top 1
+Epoch 25/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.14it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 26, global step 29160: 'val/accuracy' was not in top 1
+Epoch 26/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.27it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 27, global step 30240: 'val/accuracy' was not in top 1
+Epoch 27/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.12it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 28, global step 31320: 'val/accuracy' was not in top 1
+Epoch 28/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.17it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 29, global step 32400: 'val/accuracy' was not in top 1
+Epoch 29/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.15it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 30, global step 33480: 'val/accuracy' was not in top 1
+Epoch 30/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.23it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 31, global step 34560: 'val/accuracy' was not in top 1
+Epoch 31/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.22it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 32, global step 35640: 'val/accuracy' was not in top 1
+Epoch 32/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.23it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 33, global step 36720: 'val/accuracy' was not in top 1
+Epoch 33/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.27it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 34, global step 37800: 'val/accuracy' was not in top 1
+Epoch 34/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.16it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 35, global step 38880: 'val/accuracy' was not in top 1
+Epoch 35/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.23it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 36, global step 39960: 'val/accuracy' was not in top 1
+Epoch 36/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:37 •       12.09it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 37, global step 41040: 'val/accuracy' was not in top 1
+Epoch 37/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.09it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 38, global step 42120: 'val/accuracy' was not in top 1
+Epoch 38/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.11it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 39, global step 43200: 'val/accuracy' was not in top 1
+Epoch 39/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.06it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 40, global step 44280: 'val/accuracy' was not in top 1
+Epoch 40/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.27it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 41, global step 45360: 'val/accuracy' was not in top 1
+Epoch 41/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.17it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 42, global step 46440: 'val/accuracy' was not in top 1
+Epoch 42/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.15it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 43, global step 47520: 'val/accuracy' was not in top 1
+Epoch 43/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.08it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 44, global step 48600: 'val/accuracy' was not in top 1
+Epoch 44/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.27it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 45, global step 49680: 'val/accuracy' was not in top 1
+Epoch 45/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.08it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 46, global step 50760: 'val/accuracy' was not in top 1
+Epoch 46/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.20it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 47, global step 51840: 'val/accuracy' was not in top 1
+Epoch 47/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.23it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 48, global step 52920: 'val/accuracy' was not in top 1
+Epoch 48/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.12it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 49, global step 54000: 'val/accuracy' was not in top 1
+Epoch 49/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.14it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 50, global step 55080: 'val/accuracy' was not in top 1
+Epoch 50/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.13it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 51, global step 56160: 'val/accuracy' was not in top 1
+Epoch 51/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 52, global step 57240: 'val/accuracy' was not in top 1
+Epoch 52/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.13it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 53, global step 58320: 'val/accuracy' was not in top 1
+Epoch 53/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.11it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 54, global step 59400: 'val/accuracy' was not in top 1
+Epoch 54/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.17it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 55, global step 60480: 'val/accuracy' was not in top 1
+Epoch 55/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.12it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 56, global step 61560: 'val/accuracy' was not in top 1
+Epoch 56/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.08it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 57, global step 62640: 'val/accuracy' was not in top 1
+Epoch 57/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.21it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 58, global step 63720: 'val/accuracy' was not in top 1
+Epoch 58/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.07it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 59, global step 64800: 'val/accuracy' was not in top 1
+Epoch 59/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.24it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 60, global step 65880: 'val/accuracy' was not in top 1
+Epoch 60/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.07it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 61, global step 66960: 'val/accuracy' was not in top 1
+Epoch 61/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.21it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 62, global step 68040: 'val/accuracy' was not in top 1
+Epoch 62/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.23it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 63, global step 69120: 'val/accuracy' was not in top 1
+Epoch 63/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.24it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 64, global step 70200: 'val/accuracy' was not in top 1
+Epoch 64/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.18it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 65, global step 71280: 'val/accuracy' was not in top 1
+Epoch 65/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.17it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 66, global step 72360: 'val/accuracy' was not in top 1
+Epoch 66/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 67, global step 73440: 'val/accuracy' was not in top 1
+Epoch 67/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.29it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 68, global step 74520: 'val/accuracy' was not in top 1
+Epoch 68/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.12it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 69, global step 75600: 'val/accuracy' was not in top 1
+Epoch 69/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.04it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 70, global step 76680: 'val/accuracy' was not in top 1
+Epoch 70/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.08it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 71, global step 77760: 'val/accuracy' was not in top 1
+Epoch 71/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.08it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 72, global step 78840: 'val/accuracy' was not in top 1
+Epoch 72/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.19it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 73, global step 79920: 'val/accuracy' was not in top 1
+Epoch 73/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.09it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 74, global step 81000: 'val/accuracy' was not in top 1
+Epoch 74/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.06it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 75, global step 82080: 'val/accuracy' was not in top 1
+Epoch 75/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.19it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 76, global step 83160: 'val/accuracy' was not in top 1
+Epoch 76/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.20it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 77, global step 84240: 'val/accuracy' was not in top 1
+Epoch 77/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:36 •       12.04it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 78, global step 85320: 'val/accuracy' was not in top 1
+Epoch 78/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.14it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 79, global step 86400: 'val/accuracy' was not in top 1
+Epoch 79/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.30it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 80, global step 87480: 'val/accuracy' was not in top 1
+Epoch 80/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.32it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 81, global step 88560: 'val/accuracy' was not in top 1
+Epoch 81/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.20it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 82, global step 89640: 'val/accuracy' was not in top 1
+Epoch 82/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.13it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 83, global step 90720: 'val/accuracy' was not in top 1
+Epoch 83/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.34it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 84, global step 91800: 'val/accuracy' was not in top 1
+Epoch 84/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.12it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 85, global step 92880: 'val/accuracy' was not in top 1
+Epoch 85/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.20it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 86, global step 93960: 'val/accuracy' was not in top 1
+Epoch 86/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.14it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 87, global step 95040: 'val/accuracy' was not in top 1
+Epoch 87/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 88, global step 96120: 'val/accuracy' was not in top 1
+Epoch 88/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:34 •       12.16it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 89, global step 97200: 'val/accuracy' was not in top 1
+Epoch 89/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.25it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 90, global step 98280: 'val/accuracy' was not in top 1
+Epoch 90/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:35 •       12.07it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 91, global step 99360: 'val/accuracy' was not in top 1
+Epoch 91/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.13it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 92, global step 100440: 'val/accuracy' was not in top 1
+Epoch 92/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:31 •       12.28it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 93, global step 101520: 'val/accuracy' was not in top 1
+Epoch 93/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.35it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 94, global step 102600: 'val/accuracy' was not in top 1
+Epoch 94/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.17it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 95, global step 103680: 'val/accuracy' was not in top 1
+Epoch 95/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.10it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 96, global step 104760: 'val/accuracy' was not in top 1
+Epoch 96/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.33it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 97, global step 105840: 'val/accuracy' was not in top 1
+Epoch 97/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.31it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 98, global step 106920: 'val/accuracy' was not in top 1
+Epoch 98/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:32 •       12.03it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+Epoch 99, global step 108000: 'val/accuracy' was not in top 1
+`Trainer.fit` stopped: `max_epochs=100` reached.
+Epoch 99/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:33 •       12.16it/s loss: 2.3 v_num:
+                                      0:00:00                   alhu            
+                                                                val/accuracy:   
+                                                                0.111 val/loss: 
+                                                                2.301           
+                                                                test/accuracy:  
+                                                                0.113 test/loss:
+                                                                2.301           
+                                                                train/accuracy: 
+                                                                0.113           
+                                                                train/loss:     
+                                                                2.301           
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:                                                     epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
+wandb:       grad_2.0_norm/decoder.0.output_transform.bias_epoch ▇▂▃▅▄▅▂█▆▁▅▆▁▅▅▆▄▅▅▅▃▅▄▂▄▄▅▂▂▅▃▆▂▆▁▅▆▄▃▂
+wandb:        grad_2.0_norm/decoder.0.output_transform.bias_step █▄▃▃▅▄▃▃▆▂▁▂▃▃▄▃▄▃▃▅▆▃▂▅▃▁▅▅▁▄▄▃▂▅▃▅▃▇▄▂
+wandb:     grad_2.0_norm/decoder.0.output_transform.weight_epoch █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      grad_2.0_norm/decoder.0.output_transform.weight_step █▂▂▂▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        grad_2.0_norm/encoder.0.bias_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                         grad_2.0_norm/encoder.0.bias_step ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                      grad_2.0_norm/encoder.0.weight_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       grad_2.0_norm/encoder.0.weight_step █▇▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: grad_2.0_norm/model.layers.0.layer.cell.W_hh.weight_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:  grad_2.0_norm/model.layers.0.layer.cell.W_hh.weight_step █▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: grad_2.0_norm/model.layers.0.layer.cell.W_hx.weight_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:  grad_2.0_norm/model.layers.0.layer.cell.W_hx.weight_step ██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         grad_2.0_norm/model.layers.0.norm.norm.bias_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          grad_2.0_norm/model.layers.0.norm.norm.bias_step █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:       grad_2.0_norm/model.layers.0.norm.norm.weight_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        grad_2.0_norm/model.layers.0.norm.norm.weight_step ██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:   grad_2.0_norm/model.layers.0.output_linear.0.bias_epoch ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    grad_2.0_norm/model.layers.0.output_linear.0.bias_step ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: grad_2.0_norm/model.layers.0.output_linear.0.weight_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:  grad_2.0_norm/model.layers.0.output_linear.0.weight_step █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  grad_2.0_norm/model.norm.norm.bias_epoch ▆▇██▇▆▅▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                   grad_2.0_norm/model.norm.norm.bias_step █▆▇▆▅▆▃▂▄▂▃▂▃▂▄▃▃▁▁▂▂▂▁▄▂▂▂▂▂▂▃▁▂▂▁▁▂▃▁▁
+wandb:                grad_2.0_norm/model.norm.norm.weight_epoch █▄▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                 grad_2.0_norm/model.norm.norm.weight_step █▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                 grad_2.0_norm_total_epoch █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                  grad_2.0_norm_total_step █▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                    norm/0 ██▇▇▇▆▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                    norm/1 ▁                                       
+wandb:                                             test/accuracy █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                 test/loss ▁███████████████████████████████████████
+wandb:                                               timer/epoch ▁▄▃▆▆▆▇▇▅▄█▄▃▆▅▆▇▆▆▆▇▅▇█▇▅▅▇█▇▅▆▅▄▅▆▄▂▄▄
+wandb:                                                timer/step ▃▃▃▃▃▁▃▂▃▁▂▃▂▂▂▃▃▂▂▃▄▂▃█▂▂▃▃▂▃▂▃▄▃▃▄▃▂▁▃
+wandb:                                          timer/validation ▁████████████████████████████████▇███▇▇█
+wandb:                                            train/accuracy █▆▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                train/loss ▁▅██████████████████████████████████████
+wandb:                                             trainer/epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                                       trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                                              trainer/loss ▁▇▆▆▆▇▆▆▆▆▆▇▅▇▇▆▇▆▆▅▇▇▆█▇▇▄▅▇▆▅▆▅▆▆▆▅▅▇▇
+wandb:                                            trainer/lr/pg1 ▂▃▅▇██████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▂▁▁▁▁▁▁
+wandb:                                            trainer/lr/pg2 ▂▃▅▇██████▇▇▇▇▇▆▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▂▁▁▁▁▁▁
+wandb:                                              val/accuracy █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                  val/loss ▁███████████████████████████████████████
+wandb: 
+wandb: Run summary:
+wandb:                                                     epoch 99
+wandb:       grad_2.0_norm/decoder.0.output_transform.bias_epoch 0.12925
+wandb:        grad_2.0_norm/decoder.0.output_transform.bias_step 0.1222
+wandb:     grad_2.0_norm/decoder.0.output_transform.weight_epoch 0.01175
+wandb:      grad_2.0_norm/decoder.0.output_transform.weight_step 0.0111
+wandb:                        grad_2.0_norm/encoder.0.bias_epoch 0.0
+wandb:                         grad_2.0_norm/encoder.0.bias_step 0.0
+wandb:                      grad_2.0_norm/encoder.0.weight_epoch 0.0
+wandb:                       grad_2.0_norm/encoder.0.weight_step 0.0
+wandb: grad_2.0_norm/model.layers.0.layer.cell.W_hh.weight_epoch 0.0
+wandb:  grad_2.0_norm/model.layers.0.layer.cell.W_hh.weight_step 0.0
+wandb: grad_2.0_norm/model.layers.0.layer.cell.W_hx.weight_epoch 0.0
+wandb:  grad_2.0_norm/model.layers.0.layer.cell.W_hx.weight_step 0.0
+wandb:         grad_2.0_norm/model.layers.0.norm.norm.bias_epoch 0.0
+wandb:          grad_2.0_norm/model.layers.0.norm.norm.bias_step 0.0
+wandb:       grad_2.0_norm/model.layers.0.norm.norm.weight_epoch 0.0
+wandb:        grad_2.0_norm/model.layers.0.norm.norm.weight_step 0.0
+wandb:   grad_2.0_norm/model.layers.0.output_linear.0.bias_epoch 0.0
+wandb:    grad_2.0_norm/model.layers.0.output_linear.0.bias_step 0.0
+wandb: grad_2.0_norm/model.layers.0.output_linear.0.weight_epoch 0.0
+wandb:  grad_2.0_norm/model.layers.0.output_linear.0.weight_step 0.0
+wandb:                  grad_2.0_norm/model.norm.norm.bias_epoch 0.01957
+wandb:                   grad_2.0_norm/model.norm.norm.bias_step 0.007
+wandb:                grad_2.0_norm/model.norm.norm.weight_epoch 0.0
+wandb:                 grad_2.0_norm/model.norm.norm.weight_step 0.0
+wandb:                                 grad_2.0_norm_total_epoch 0.13165
+wandb:                                  grad_2.0_norm_total_step 0.1229
+wandb:                                                    norm/0 0.07589
+wandb:                                                    norm/1 inf
+wandb:                                             test/accuracy 0.1135
+wandb:                                                 test/loss 2.30099
+wandb:                                               timer/epoch 213.92261
+wandb:                                                timer/step 0.1704
+wandb:                                          timer/validation 22.02718
+wandb:                                            train/accuracy 0.11252
+wandb:                                                train/loss 2.3012
+wandb:                                             trainer/epoch 99.0
+wandb:                                       trainer/global_step 107999
+wandb:                                              trainer/loss 2.29742
+wandb:                                            trainer/lr/pg1 0.0
+wandb:                                            trainer/lr/pg2 0.0
+wandb:                                              val/accuracy 0.111
+wandb:                                                  val/loss 2.30084
+wandb: 
+wandb: 🚀 View run rnn-lin-mnist1-o at: https://wandb.ai/yuqinzhou/TNLM/runs/0wuualhu
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230814_160146-0wuualhu/logs

@@ -275,50 +275,53 @@ class MIRNNCell(CellBase):
 
 
 
-class GatedRNNCell(RNNCell):
-    name = 'gru'
-
+class TTLM(CellBase):
+    name = 'ttlm'
     def __init__(
-            self, d_input, d_model,
-            gate='G', # 'N' | 'G' | 'R' | 'UR'
-            reset='G',
+            self, d_input, d_model, lr,
             **kwargs
         ):
-        self.gate  = gate
-        self.reset = reset
-        super().__init__(d_input, d_model, **kwargs)
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    def reset_parameters(self):
-        super().reset_parameters()
-        # self.reset_gate()
 
-    # def reset_gate(self):
-        preact_ctor = LinearActivation
-        preact_args = [self.d_input + self.d_model, self.d_model, self.architecture['bias']]
-        self.W_g     = Gate(self.d_model, preact_ctor, preact_args, mechanism=self.gate)
-        self.W_reset = Gate(self.d_model, preact_ctor, preact_args, mechanism=self.reset)
+        super().__init__(d_input, d_model, lr, **kwargs)
+        ## register weight decay and the factored lr
+        optim = {"weight_decay": 0.0, "lr": lr}
+        for para in self.named_parameters():
+            setattr(attrgetter(para[0])(self), "_optim", optim)
+
+        self.activation = nn.Tanh()
+    
+
 
     def forward(self, input, h):
-        hx = torch.cat((input, h), dim=-1)
-        reset = self.W_reset(hx)
+        hidden = self.activation((self.A @ h.to(dtype= self.A.dtype)) * (self.B @ input.to(dtype= self.B.dtype)))
+        # hidden = torch.log(self.A @ h.to(dtype= self.A.dtype)) + torch.log(self.B @ input.to(dtype= self.B.dtype))
+        hidden_out = (self.C @ hidden).real + self.D @ input
+        print(torch.mean(hidden))
+        # wandb.log({"after/hidden_out": torch.mean(hidden_out), "after/hidden": torch.mean(hidden.real)})
+        return hidden_out, hidden_out
 
-        _, update = super().forward(input, reset*h)
+    def default_state(self, *batch_shape, device=None):
+        return torch.complex(torch.randn(self.d_model, *batch_shape, device=device,requires_grad=False),
+        torch.randn(self.d_model, *batch_shape,device=device,requires_grad=False))
 
-        g = self.W_g(hx)
-        h = (1.-g) * h + g * update
+    def reset_parameters(self):
+        C_re = nn.init.xavier_normal_(torch.empty(self.d_model, self.d_model))
+        C_im = nn.init.xavier_normal_(torch.empty(self.d_model, self.d_model))
+        self.C = nn.Parameter(torch.complex(C_re,C_im).to(self.device))
+        self.D = nn.Parameter(nn.init.xavier_normal_(torch.empty(self.d_model, self.d_input)).to(self.device))
 
-        return h, h
+        self.reset_hidden_to_hidden()
+        self.reset_hidden_to_input()
 
-class ExpRNNCell(RNNCell):
-    """Implementation of expRNN.
 
-    Note: there is a subtle distinction between this and the ExpRNN original cell
-    in the initialization of hx, but this shouldn't make a difference.
+    def reset_hidden_to_hidden(self):
+        A_re = nn.init.xavier_normal_(torch.empty(self.d_model, self.d_model))
+        A_im = nn.init.xavier_normal_(torch.empty(self.d_model, self.d_model))
+        self.A = nn.Parameter(torch.complex(A_re,A_im).to(self.device))
 
-    (Original ExpRNN cell is located in models.nn.exprnn.orthogonal.OrthogonalRNN.)
-    """
-
-    name = 'exprnn'
-
-    def __init__(self, d_input, d_model, orthogonal=True, hidden_activation='modrelu', **kwargs):
-        super().__init__(d_input, d_model, orthogonal=orthogonal, hidden_activation=hidden_activation, **kwargs)
+    def reset_hidden_to_input(self):
+        B_re = nn.init.xavier_normal_(torch.empty(self.d_input, self.d_model))
+        B_im = nn.init.xavier_normal_(torch.empty(self.d_input, self.d_model))
+        self.B = nn.Parameter(torch.complex(B_re,B_im).to(self.device))

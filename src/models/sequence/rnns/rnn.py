@@ -30,17 +30,18 @@ class RNN(SequenceModule):
     def forward(self, inputs, state=None, **kwargs):
         """
         cell.forward : (input, state) -> (output, state)
-        inputs : [n_batch, l_seq, d]
+        inputs : [B, L, H]
         """
 
         if self.transposed: inputs = inputs.transpose(-1, -2)
+        inputs = inputs.transpose(0, -1) #(H, L, B) 
 
         # Automatically detect PackedSequence
         if isinstance(inputs, nn.utils.rnn.PackedSequence):
             return PackedRNN.forward(self, inputs)
 
         # Construct initial state
-        state = self.cell.default_state(*inputs.shape[:-2], device=inputs.device)
+        state = self.cell.default_state(inputs.shape[-1], device=inputs.device)
         outputs = []
 
         for input in torch.unbind(inputs, dim=-2):
@@ -50,6 +51,7 @@ class RNN(SequenceModule):
                 outputs.append(output)
         outputs = torch.stack(outputs, dim=-2) if self.return_output else None
         if self.transposed and outputs is not None: outputs = outputs.transpose(-1, -2)
+        outputs = outputs.transpose(0, -1) #(B, L, H) 
         return outputs, state
 
     def step(self, x, state):

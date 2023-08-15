@@ -1,34 +1,25 @@
 # @package _global_
-# Basic rnn experiment
-# Override model/layer/cell for different RNN cells, e.g. `python -m train experiment=rnn model/layer/cell=hippo-legs
 defaults:
   - /pipeline: mnist
   - /model: s4
-  - override /model/layer: rnn
+  - override /model/layer: lru
   - override /scheduler: cosine_warmup
-  # - override / optimizer: sgd
+  # - override /optimizer: sgd
 
 
 model:
   dropout: 0.2
-  tie_dropout: False
+  tie_dropout: false
+  d_model: 384 ## d_input / d_output
   n_layers: 1
-  d_model: 384 
   prenorm: False
   transposed: False
-<<<<<<< HEAD
   norm: batch
-=======
-  norm: batch 
->>>>>>> cfcab92 (sota)
   pool: null
   layer:
-    cell:
-      d_input: 384
-      lr: 7.5e-5
-      hidden_activation: identity
-  # track_norms: true 
-  
+    lr: 7.5e-5
+    d_hidden: 128 
+  track_norms: false
 
 loader:
   batch_size: 50
@@ -39,7 +30,7 @@ optimizer:
 
 trainer:
   max_epochs: 100
-  # track_grad_norm: 2
+  track_grad_norm: 2
   # gradient_clip_val: 0.25
   # gradient_clip_algorithm: norm
   # log_every_n_steps: 1
@@ -47,7 +38,6 @@ trainer:
 scheduler:
   num_warmup_steps: 10800  # 10 epoch (1080 * 10)
   num_training_steps: 108000  # 100 epochs
-  # patience: 20
 
 train:
   seed: 2222

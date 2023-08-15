@@ -37,11 +37,7 @@ CONFIG
 │       mode: online                                                            
 │       save_dir: .                                                             
 │       id: null                                                                
-<<<<<<<< HEAD:slurm-9975.out
-│       name: mirnn-lin-cifar1-o                                                
-========
-│       name: ttlm-mnist1-v0                                                    
->>>>>>>> cfcab92 (sota):slurm-1516.out
+│       name: ttlm-mnist1-v1-complex-inside1                                    
 │                                                                               
 ├── trainer
 │   └── accelerator: gpu                                                        
@@ -55,6 +51,7 @@ CONFIG
 │       limit_val_batches: 1.0                                                  
 │       enable_model_summary: false                                             
 │       track_grad_norm: 2                                                      
+│       precision: 32                                                           
 │                                                                               
 ├── loader
 │   └── batch_size: 50                                                          
@@ -63,13 +60,8 @@ CONFIG
 │       drop_last: true                                                         
 │                                                                               
 ├── dataset
-│   └── _name_: cifar                                                           
-│       permute: null                                                           
-│       grayscale: false                                                        
-│       tokenize: false                                                         
-│       augment: false                                                          
-│       cutout: false                                                           
-│       random_erasing: false                                                   
+│   └── _name_: mnist                                                           
+│       permute: true                                                           
 │       val_split: 0.1                                                          
 │       seed: 42                                                                
 │                                                                               
@@ -90,8 +82,8 @@ CONFIG
 │                                                                               
 ├── scheduler
 │   └── _name_: cosine_warmup                                                   
-│       num_warmup_steps: 18000                                                 
-│       num_training_steps: 180000                                              
+│       num_warmup_steps: 10800                                                 
+│       num_training_steps: 108000                                              
 │                                                                               
 ├── encoder
 │   └── linear                                                                  
@@ -101,20 +93,12 @@ CONFIG
 │                                                                               
 ├── model
 │   └── layer:                                                                  
-<<<<<<<< HEAD:slurm-9975.out
 │         cell:                                                                 
-│           _name_: mirnn                                                       
-│           hidden_activation: identity                                         
-│           orthogonal: false                                                   
+│           _name_: ttlm                                                        
 │           d_input: 384                                                        
 │           lr: 7.5e-06                                                         
-│         _name_: mirnn                                                         
-│         return_output: true                                                   
-========
 │         _name_: ttlm                                                          
-│         lr: 0.00075                                                           
-│         d_hidden: 384                                                         
->>>>>>>> cfcab92 (sota):slurm-1516.out
+│         return_output: true                                                   
 │       _name_: model                                                           
 │       prenorm: false                                                          
 │       transposed: false                                                       
@@ -126,7 +110,7 @@ CONFIG
 │       norm: batch                                                             
 │       dropout: 0.2                                                            
 │       tie_dropout: false                                                      
-│       track_norms: false                                                      
+│       track_norms: true                                                       
 │       encoder: null                                                           
 │       decoder: null                                                           
 │                                                                               
@@ -162,31 +146,17 @@ wandb: Currently logged in as: yuqinzhou. Use `wandb login --relogin` to force r
 wandb: wandb version 0.15.8 is available!  To upgrade, please run:
 wandb:  $ pip install wandb --upgrade
 wandb: Tracking run with wandb version 0.15.4
-<<<<<<<< HEAD:slurm-9975.out
-wandb: Run data is saved locally in ./wandb/run-20230808_151601-dsg0khma
+wandb: Run data is saved locally in ./wandb/run-20230815_111312-vigj5ye3
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run mirnn-lin-cifar1-o
+wandb: Syncing run ttlm-mnist1-v1-complex-inside1
 wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
-wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/dsg0khma
-[2023-08-08 15:16:04,702][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
-[2023-08-08 15:16:04,703][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
-[2023-08-08 15:16:04,704][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
-[2023-08-08 15:16:04,705][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
-[2023-08-08 15:16:04,706][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
-[2023-08-08 15:16:04,707][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
-========
-wandb: Run data is saved locally in ./wandb/run-20230815_093255-60n4irug
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run ttlm-mnist1-v0
-wandb: ⭐️ View project at https://wandb.ai/yuqinzhou/TNLM
-wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/60n4irug
-[2023-08-15 09:32:59,653][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
-[2023-08-15 09:32:59,654][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
-[2023-08-15 09:32:59,658][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
-[2023-08-15 09:32:59,659][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
-[2023-08-15 09:32:59,663][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
-[2023-08-15 09:32:59,664][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
->>>>>>>> cfcab92 (sota):slurm-1516.out
+wandb: 🚀 View run at https://wandb.ai/yuqinzhou/TNLM/runs/vigj5ye3
+[2023-08-15 11:13:16,459][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.LearningRateMonitor>
+[2023-08-15 11:13:16,460][__main__][INFO] - Instantiating callback <src.callbacks.timer.Timer>
+[2023-08-15 11:13:16,463][__main__][INFO] - Instantiating callback <src.callbacks.params.ParamsLog>
+[2023-08-15 11:13:16,465][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>
+[2023-08-15 11:13:16,472][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>
+[2023-08-15 11:13:16,473][__main__][INFO] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>
 GPU available: True (cuda), used: True
 TPU available: False, using: 0 TPU cores
 IPU available: False, using: 0 IPUs
@@ -194,27 +164,15 @@ HPU available: False, using: 0 HPUs
 `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
 `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
 LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-<<<<<<<< HEAD:slurm-9975.out
-Files already downloaded and verified
 NOTE: no dropout inside recurrent cell
-========
->>>>>>>> cfcab92 (sota):slurm-1516.out
 SequenceLightningModule(
   (model): SequenceModel(
     (drop): Identity()
     (layers): ModuleList(
       (0): SequenceResidualBlock(
-<<<<<<<< HEAD:slurm-9975.out
         (layer): RNN(
-          (cell): MIRNNCell(
-            (W_hx): Linear(in_features=384, out_features=384, bias=True)
-            (activate): Identity()
-            (W_hh): Linear(in_features=384, out_features=384, bias=True)
-          )
+          (cell): TTLM()
         )
-========
-        (layer): TTLM()
->>>>>>>> cfcab92 (sota):slurm-1516.out
         (residual): Residual()
         (norm): Normalization(
           (norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
@@ -230,7 +188,7 @@ SequenceLightningModule(
     (norm): Identity()
   )
   (encoder): Linear(
-    (0): Linear(in_features=3, out_features=384, bias=True)
+    (0): Linear(in_features=1, out_features=384, bias=True)
   )
   (decoder): SequenceDecoder(
     (0): SequenceDecoder(
@@ -238,60 +196,22 @@ SequenceLightningModule(
     )
   )
 )
-<<<<<<<< HEAD:slurm-9975.out
-Files already downloaded and verified
 Hyperparameter groups [{'weight_decay': 0.0, 'lr': 7.5e-06}]
-[2023-08-08 15:16:08,180][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 3e-05 | weight_decay 0.05
-[2023-08-08 15:16:08,180][__main__][INFO] - Optimizer group 1 | 4 tensors | lr 7.5e-06 | weight_decay 0.0
-========
-Hyperparameter groups [{'weight_decay': 0.0, 'lr': 0.00075}]
-[2023-08-15 09:33:01,852][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 0.0003 | weight_decay 0.05
-[2023-08-15 09:33:01,852][__main__][INFO] - Optimizer group 1 | 2 tensors | lr 0.00075 | weight_decay 0.0
->>>>>>>> cfcab92 (sota):slurm-1516.out
+[2023-08-15 11:13:18,487][__main__][INFO] - Optimizer group 0 | 8 tensors | lr 3e-05 | weight_decay 0.05
+[2023-08-15 11:13:18,487][__main__][INFO] - Optimizer group 1 | 4 tensors | lr 7.5e-06 | weight_decay 0.0
 ┏━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
 ┃   ┃ Name    ┃ Type            ┃ Params ┃
 ┡━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
-│ 0 │ model   │ SequenceModel   │  592 K │
-│ 1 │ encoder │ Linear          │  1.5 K │
+│ 0 │ model   │ SequenceModel   │  886 K │
+│ 1 │ encoder │ Linear          │    768 │
 │ 2 │ decoder │ SequenceDecoder │  3.9 K │
 └───┴─────────┴─────────────────┴────────┘
-Trainable params: 597 K                                                         
+Trainable params: 890 K                                                         
 Non-trainable params: 0                                                         
-Total params: 597 K                                                             
-Total estimated model params size (MB): 2                                       
+Total params: 890 K                                                             
+Total estimated model params size (MB): 3                                       
 SLURM auto-requeueing enabled. Setting signal handlers.
-<<<<<<<< HEAD:slurm-9975.out
-[2023-08-08 15:16:08,194][__main__][INFO] - Loaded 'val' dataloader:         5000 examples |    100 steps
-[2023-08-08 15:16:08,194][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
-[2023-08-08 15:16:12,795][__main__][INFO] - Loaded 'train' dataloader:      45000 examples |    900 steps
-slurmstepd: error: *** JOB 9975 ON hendrixgpu20fl CANCELLED AT 2023-08-08T15:20:23 ***
-========
-[2023-08-15 09:33:01,870][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
-[2023-08-15 09:33:01,870][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
-[2023-08-15 09:33:06,154][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
-Epoch 0, global step 1080: 'val/accuracy' reached 0.11350 (best 0.11350), saving model to '/home/qvk729/Master_thesis/outputs/2023-08-15/09-32-53-696907/checkpoints/val/accuracy.ckpt' as top 1
-Epoch 0/99 ━━━━━━━━━━━━━━━ 1400/1400 0:01:24 •       18.83it/s loss: 2.3 v_num: 
-                                     0:00:00                   irug             
-                                                               val/accuracy:    
-                                                               0.113 val/loss:  
-                                                               2.293            
-                                                               test/accuracy:   
-                                                               0.117 test/loss: 
-                                                               2.293            
-                                                               train/accuracy:  
-                                                               0.105 train/loss:
-                                                               2.304            
-Epoch 1, global step 2160: 'val/accuracy' reached 0.17083 (best 0.17083), saving model to '/home/qvk729/Master_thesis/outputs/2023-08-15/09-32-53-696907/checkpoints/val/accuracy.ckpt' as top 1
-Epoch 1/99 ━━━━━━━━━━━━━━━ 1400/1400 0:01:27 •       17.97it/s loss: 2.26 v_num:
-                                     0:00:00                   irug             
-                                                               val/accuracy:    
-                                                               0.171 val/loss:  
-                                                               2.262            
-                                                               test/accuracy:   
-                                                               0.172 test/loss: 
-                                                               2.263            
-                                                               train/accuracy:  
-                                                               0.163 train/loss:
-                                                               2.28             
-slurmstepd: error: *** JOB 1516 ON hendrixgpu05fl CANCELLED AT 2023-08-15T09:36:14 ***
->>>>>>>> cfcab92 (sota):slurm-1516.out
+[2023-08-15 11:13:18,505][__main__][INFO] - Loaded 'val' dataloader:         6000 examples |    120 steps
+[2023-08-15 11:13:18,505][__main__][INFO] - Loaded 'test' dataloader:       10000 examples |    200 steps
+[2023-08-15 11:13:24,571][__main__][INFO] - Loaded 'train' dataloader:      54000 examples |   1080 steps
+slurmstepd: error: *** JOB 1573 ON hendrixgpu20fl CANCELLED AT 2023-08-15T11:14:06 ***

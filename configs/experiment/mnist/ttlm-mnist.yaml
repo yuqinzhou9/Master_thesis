@@ -4,7 +4,7 @@
 defaults:
   - /pipeline: mnist
   - /model: s4
-  - override /model/layer: rnn
+  - override /model/layer: ttlm
   - override /scheduler: cosine_warmup
   # - override / optimizer: sgd
 
@@ -16,33 +16,29 @@ model:
   d_model: 384 
   prenorm: False
   transposed: False
-<<<<<<< HEAD
-  norm: batch
-=======
   norm: batch 
->>>>>>> cfcab92 (sota)
   pool: null
   layer:
     cell:
       d_input: 384
-      lr: 7.5e-5
-      hidden_activation: identity
-  # track_norms: true 
+      lr: 7.5e-6
+  track_norms: true 
   
 
 loader:
   batch_size: 50
 
 optimizer:
-  lr: 3e-4
+  lr: 3e-5
   weight_decay: 0.05
 
 trainer:
   max_epochs: 100
-  # track_grad_norm: 2
+  track_grad_norm: 2
   # gradient_clip_val: 0.25
   # gradient_clip_algorithm: norm
-  # log_every_n_steps: 1
+  log_every_n_steps: 1
+  precision: 32
 
 scheduler:
   num_warmup_steps: 10800  # 10 epoch (1080 * 10)

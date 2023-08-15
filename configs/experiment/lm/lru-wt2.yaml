@@ -1,0 +1,64 @@
+# @package _global_
+defaults:
+  - /pipeline: wt2
+  - /model: s4
+  - override /model/layer: lru
+  - override /scheduler: cosine_warmup
+
+# Dataset
+dataset:
+  test_split: True
+
+loader:
+  batch_size: 50
+  l_max: 128
+  n_context: 1
+  eval:
+    batch_size: null
+    l_max: null
+
+task:
+  div_val: 1
+  dropemb: 0.25
+  dropsoft: 0.25
+
+# Model
+model:
+  dropout: 0.25
+  tie_dropout: false
+  d_model: 384 ## d_input / d_output
+  n_layers: 1
+  prenorm: False
+  transposed: False
+  norm: batch
+  pool: null
+  layer:
+    lr: 7.5e-5
+    d_hidden: 128 
+  track_norms: false
+
+# Optimizer (adamw)
+optimizer:
+  lr: 3e-4
+  weight_decay: 0.1
+
+# Scheduler (cosine)
+trainer:
+  max_epochs: 200
+
+scheduler:
+  num_warmup_steps: 7552
+  num_training_steps: 75520
+
+  # l_max: num_steps per epoch : 20 epochs : train  (50 batch size, bpe, 0.8 train)
+  # 16 : 3756 : 75120 : 60096
+  # 32 : 1879 : 37580 : 30064
+  # 64 : 941 : 18820 : 15056
+  # 128 : 472 : 9440 : 7552
+  # 256 : 238 : 4760 : 3808
+  # 512 : 120 : 2400 : 1920
+  # 1024 : 61: 1220 : 976
+
+
+train:
+  seed: 1111
