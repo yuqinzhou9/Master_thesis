@@ -451,3 +451,15 @@ Epoch 18/99 ━━━━━━━━━━━━━━━ 1400/1400 0:04:25 • 
                                                                 0.935           
                                                                 train/loss:     
                                                                 0.214           
+Epoch 19, global step 21600: 'val/accuracy' was not in top 1
+Epoch 19/99 ━━━━━━━━━━━━━━━ 1400/1400 0:04:29 •       11.05it/s loss: 0.223     
+                                      0:00:00                   v_num: gll9     
+                                                                val/accuracy:   
+                                                                0.674 val/loss: 
+                                                                1.201           
+                                                                test/accuracy:  
+                                                                0.689 test/loss:
+                                                                1.144           
+                                                                train/accuracy: 
+                                                                0.94 train/loss:
+                                                                0.201           
