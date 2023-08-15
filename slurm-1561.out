@@ -225,3 +225,135 @@ Epoch 0/99 ━━━━━━━━━━━━━━━━ 1400/1400 0:13:51 �
                                                                train/accuracy:  
                                                                0.099 train/loss:
                                                                nan              
+Epoch 1/99 ━━━━━━━━━━━━━━╸  1294/1400 0:12:54 •       3.50it/s loss: nan v_num: 
+                                      0:00:31                  7lrt             
+                                                               val/accuracy:    
+                                                               0.097 val/loss:  
+                                                               nan              
+                                                               test/accuracy:   
+                                                               0.098 test/loss: 
+                                                               nan              
+                                                               train/accuracy:  
+                                                               0.099 train/loss:
+                                                               nan              
+Validation ━━━━━━━╸         94/200    0:00:26 •       3.57it/s                  
+                                      0:00:30                                   
+Error executing job with overrides: ['experiment=mnist/ttlm-mnist', 'wandb.name=ttlm-mnist1-v1-complex-outside1']
+Traceback (most recent call last):
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/qvk729/Master_thesis/train.py", line 716, in <module>
+    main()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/main.py", line 94, in decorated_main
+    _run_hydra(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/_internal/utils.py", line 457, in _run_app
+    run_and_report(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/_internal/utils.py", line 223, in run_and_report
+    raise ex
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/_internal/utils.py", line 220, in run_and_report
+    return func()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/_internal/utils.py", line 458, in <lambda>
+    lambda: hydra.run(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/_internal/hydra.py", line 132, in run
+    _ = ret.return_value
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/qvk729/Master_thesis/train.py", line 712, in main
+    train(config)
+  File "/home/qvk729/Master_thesis/train.py", line 696, in train
+    trainer.fit(model)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 608, in fit
+    call._call_and_handle_interrupt(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/call.py", line 38, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 650, in _fit_impl
+    self._run(model, ckpt_path=self.ckpt_path)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 1112, in _run
+    results = self._run_stage()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 1191, in _run_stage
+    self._run_train()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 1214, in _run_train
+    self.fit_loop.run()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/fit_loop.py", line 267, in advance
+    self._outputs = self.epoch_loop.run(self._data_fetcher)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/loop.py", line 200, in run
+    self.on_advance_end()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/epoch/training_epoch_loop.py", line 250, in on_advance_end
+    self._run_validation()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/epoch/training_epoch_loop.py", line 308, in _run_validation
+    self.val_loop.run()
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/dataloader/evaluation_loop.py", line 152, in advance
+    dl_outputs = self.epoch_loop.run(self._data_fetcher, dl_max_batches, kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/epoch/evaluation_epoch_loop.py", line 137, in advance
+    output = self._evaluation_step(**kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/loops/epoch/evaluation_epoch_loop.py", line 234, in _evaluation_step
+    output = self.trainer._call_strategy_hook(hook_name, *kwargs.values())
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 1494, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in validation_step
+    return self.model.validation_step(*args, **kwargs)
+  File "/home/qvk729/Master_thesis/train.py", line 445, in validation_step
+    loss = self._shared_step(
+  File "/home/qvk729/Master_thesis/train.py", line 323, in _shared_step
+    x, y, w = self.forward(batch)
+  File "/home/qvk729/Master_thesis/train.py", line 304, in forward
+    x, state = self.model(x, **w, state=self._state)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/qvk729/Master_thesis/src/models/sequence/backbones/model.py", line 127, in forward
+    outputs, state = layer(outputs, *args, state=prev_state, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/qvk729/Master_thesis/src/models/sequence/backbones/block.py", line 115, in forward
+    y_for, new_state = self.layer(y, state=state, **kwargs) #(B, L, H)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/qvk729/Master_thesis/src/models/sequence/rnns/rnn.py", line 48, in forward
+    output, new_state = self.step(input, state)
+  File "/home/qvk729/Master_thesis/src/models/sequence/rnns/rnn.py", line 58, in step
+    return self.cell.step(x, state)
+  File "/home/qvk729/Master_thesis/src/models/sequence/rnns/cells/basic.py", line 73, in step
+    return self.forward(x, state)
+  File "/home/qvk729/Master_thesis/src/models/sequence/rnns/cells/basic.py", line 287, in forward
+    hidden_out = (self.C @ hidden).real + self.D @ input
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 391, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 342, in wrapper_fn
+    return func(self, *args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 332, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 1748, in log
+    self._log(data=data, step=step, commit=commit)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 1529, in _log
+    self._partial_history_callback(data, step, commit)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 1399, in _partial_history_callback
+    self._backend.interface.publish_partial_history(
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 586, in publish_partial_history
+    self._publish_partial_history(partial_history)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 89, in _publish_partial_history
+    self._publish(rec)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/qvk729/miniconda3/envs/TNLM_new/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: While tearing down the service manager. The following error has occurred: [Errno 32] Broken pipe
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=1561.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

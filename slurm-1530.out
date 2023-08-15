@@ -452,3 +452,16 @@ Epoch 18/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:30 • 
                                                                 0.227           
                                                                 train/loss:     
                                                                 2.066           
+Epoch 19, global step 21600: 'val/accuracy' was not in top 1
+Epoch 19/99 ━━━━━━━━━━━━━━━ 1400/1400 0:03:28 •       13.15it/s loss: 2.07      
+                                      0:00:00                   v_num: mwoz     
+                                                                val/accuracy:   
+                                                                0.226 val/loss: 
+                                                                2.064           
+                                                                test/accuracy:  
+                                                                0.221 test/loss:
+                                                                2.064           
+                                                                train/accuracy: 
+                                                                0.226           
+                                                                train/loss:     
+                                                                2.066           
